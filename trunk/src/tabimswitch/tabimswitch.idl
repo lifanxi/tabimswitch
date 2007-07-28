@@ -1,0 +1,8 @@
+#include "nsISupports.idl"
+
+[scriptable, uuid(081f8e2a-8c1a-4149-9de7-6d75f716825e)]
+interface ITabImSwitchApp : nsISupports
+{
+  attribute AString currentKeyboardLayoutName;
+};
+
