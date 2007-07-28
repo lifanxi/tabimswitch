@@ -1,0 +1,4 @@
+content	tabimswitch	content/
+locale	tabimswitch	en-US	locale/en-US/
+skin	tabimswitch	classic/1.0	skin/
+overlay	chrome://browser/content/browser.xul	chrome://tabimswitch/content/firefoxOverlay.xul
