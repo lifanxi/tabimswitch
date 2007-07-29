@@ -1,12 +1,14 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿﻿<?xml version="1.0" encoding="UTF-8"?>
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
  xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
     <em:id>TabImSwitch@ftofficer</em:id>
     <em:name>TabIMSwitch</em:name>
-    <em:version>1.0.0.1</em:version>
+    <em:version>1.0.0.4</em:version>
     <em:creator>ftofficer</em:creator>
     <em:description>Save the Input Method of each Tab and change it accordingly when switching tabs</em:description>
+    <em:homepageURL>http://tabimswitch.googlecode.com</em:homepageURL>
+    <em:updateURL>http://tabimswitch.googlecode.com/files/tabimswitch.xpi</em:updateURL>
     <em:aboutURL>chrome://tabimswitch/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://tabimswitch/content/tabimswitch.png</em:iconURL>
     <em:targetApplication>

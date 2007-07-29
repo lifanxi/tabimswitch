@@ -27,6 +27,10 @@ var tabimswitch = {
   _managedWindows : [],
   _inputMethodMap : null,
 
+  _defaultInputMethod : null,
+
+  _urlBarFocused : false,
+
   //
   // Firefox event handlers
   //
@@ -111,10 +115,51 @@ var tabimswitch = {
     this.notifyTabChange(browser);
   },
 
+  onUrlBarFocus: function(e)
+  {
+    debugging.trace("onUrlBarFocus");
+    if ( ! this._urlBarFocused )
+    {
+      debugging.infoLog("Focused to URL bar");
+      this._urlBarFocused = true;
+
+      var curTab = this._currentTab;
+      if ( curTab )
+      {
+        curIm = this._getBrowserInputMethod();
+        this._saveTabInputMethod(curTab, curIm);
+      }
+
+      this._setBrowserInputMethod(this._defaultInputMethod);
+    }
+  },
+
+  onUrlBarLoseFocus: function(e)
+  {
+    debugging.trace("onUrlBarLoseFocus");
+
+    if ( this._urlBarFocused )
+    {
+      debugging.infoLog("URL bar lost focus");
+      this._urlBarFocused = false;
+      var curTab = this._getCurrentTab(getBrowser());
+      if ( curTab )
+      {
+        curIm = this._getTabInputMethod(curTab);
+        this._setBrowserInputMethod(curIm);
+        this._currentTab = curTab;
+      }
+      else
+      {
+        debugging.warning("onUrlBarLoseFocus: No current tab now");
+      }
+    }
+  },
+
   notifyTabChange: function(browser)
   {
     var oldTab = this._currentTab;
-    var newTab = tabimswitch._getCurrentTab(browser);
+    var newTab = this._getCurrentTab(browser);
 
     if ( newTab != null && oldTab != newTab )
     {
@@ -190,6 +235,9 @@ var tabimswitch = {
       return;
     }
 
+    this._defaultInputMethod = this._getBrowserInputMethod();
+
+    this._registerURLBarEvent();
     this._registerTabEventListeners();
 
     this._delayedInitSucceeded = true;
@@ -353,6 +401,13 @@ var tabimswitch = {
     container.addEventListener("TabMove", function(e){tabimswitch.onTabMoved(e);}, false);
     container.addEventListener("TabClose", function(e){tabimswitch.onTabRemoved(e);}, false);
     container.addEventListener("TabSelect", function(e){tabimswitch.onTabSelectChange(e);}, false);
+  },
+
+  _registerURLBarEvent: function()
+  {
+    var url = document.getElementById("urlbar");
+    url.addEventListener("focus", function(e){tabimswitch.onUrlBarFocus(e);}, true);
+    url.addEventListener("blur", function(e){tabimswitch.onUrlBarLoseFocus(e);}, true);
   },
 
   _getWindowFromObj: function(obj)
