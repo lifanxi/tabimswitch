@@ -64,4 +64,4 @@ var debugging = {
   __dummy : function() {}
 };
 
-debugging.init("TabImSwitch", debugging.LOG_WARN);
+debugging.init("TabImSwitch", debugging.LOG_DEBUG);
