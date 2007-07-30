@@ -9,7 +9,7 @@ When you are using !FireFox, you may have suffered inconvinent caused by the lac
 
 = How to Start =
 
-The TabIMSwitch is so simple that no configuration is needed. Just [Download download] the current version of TabIMSwitch and drag-and-drop it to your !FireFox window, click Yes to install the extension, and you can get the benifit of this tool!
+The TabIMSwitch is so simple that no configuration is needed. Just [http://code.google.com/p/tabimswitch/downloads/list download] the current version of TabIMSwitch and drag-and-drop it to your !FireFox window, click Yes to install the extension, and you can get the benifit of this tool!
 
 = What's the Different? =
 
