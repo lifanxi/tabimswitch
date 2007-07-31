@@ -1,0 +1,14 @@
+#labels Phase-Implementation,Build
+#How to build the project
+
+= How to Build TabIMSwitch =
+
+You can check out source code of TabIMSwitch and build it by yourself.
+
+== Get Source Code ==
+
+The project is being development, so you can choose stable source code or current source code to build TabIMSwitch. We recommend you to use the stable source code, because the code have been tested and is stable enough for normal users.
+
+To get stable source code, you can choose these two method:
+  # Download the zipped source code for specified version.
+  # Check out source code from svn reponsitories, with specified tags.
