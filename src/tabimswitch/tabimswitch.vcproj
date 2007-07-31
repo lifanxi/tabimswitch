@@ -92,8 +92,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="copy and register component files"
-				CommandLine="post-build $(ConfigurationName)"
+				Description="copy component files"
+				CommandLine="copy-comp $(ConfigurationName)"
 			/>
 		</Configuration>
 		<Configuration
@@ -172,8 +172,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="copy and register component files"
-				CommandLine="post-build $(ConfigurationName)"
+				Description="copy component files"
+				CommandLine="copy-comp $(ConfigurationName)"
 			/>
 		</Configuration>
 	</Configurations>
@@ -197,7 +197,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="xpidl-build.cmd &quot;$(InputFileName)&quot;&#x0D;&#x0A;"
+						CommandLine="xpidl-build.bat &quot;$(InputFileName)&quot;&#x0D;&#x0A;"
 						Outputs="$(InputName).h"
 					/>
 				</FileConfiguration>
@@ -206,7 +206,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="xpidl-build.cmd &quot;$(InputFileName)&quot;&#x0D;&#x0A;"
+						CommandLine="xpidl-build.bat &quot;$(InputFileName)&quot;&#x0D;&#x0A;"
 						Outputs="$(InputName).h"
 					/>
 				</FileConfiguration>

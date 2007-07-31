@@ -83,7 +83,7 @@ var tabimswitch = {
     if ( newTab )
     {
       debugging.infoLog("New Tab created: "+tabimswitch._getTabLinkedPageId(newTab));
-      var im = this._defaultInputMethod;
+      var im = this._getBrowserInputMethod();
       this._saveTabInputMethod(newTab, im);
     }
     else
@@ -167,12 +167,7 @@ var tabimswitch = {
            + tabimswitch._getTabLinkedPageId(oldTab) +" to "
            + tabimswitch._getTabLinkedPageId(newTab));
 
-      //
-      // If URL bar is currently focused, and the tab changed,
-      // will not save the tab input method, because currently,
-      // the browser input method is the default input method.
-      //
-      if ( oldTab != null && ! this._urlBarFocused )
+      if ( oldTab != null )
       {
         oldIm = this._getBrowserInputMethod();
         this._saveTabInputMethod(oldTab, oldIm);

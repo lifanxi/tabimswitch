@@ -4,7 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>TabImSwitch@ftofficer</em:id>
     <em:name>TabIMSwitch</em:name>
-    <em:version>1.0.0.5</em:version>
+    <em:version>1.0.0.4</em:version>
     <em:creator>ftofficer</em:creator>
     <em:description>Save the Input Method of each Tab and change it accordingly when switching tabs</em:description>
     <em:homepageURL>http://tabimswitch.googlecode.com</em:homepageURL>
