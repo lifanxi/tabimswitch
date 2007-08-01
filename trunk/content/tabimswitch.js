@@ -21,7 +21,7 @@ var tabimswitch = {
   //
   // Data members
   //
-  _isWndActive : true,
+  _isWndActive : false,
   _currentTab : null,
 
   _managedWindows : [],
@@ -30,6 +30,9 @@ var tabimswitch = {
   _defaultInputMethod : null,
 
   _urlBarFocused : false,
+
+  _app : null,
+  _manager : null,
 
   //
   // Firefox event handlers
@@ -40,25 +43,23 @@ var tabimswitch = {
 
     this._delayedInit();
 
-    var firstTab = this._getCurrentTab(getBrowser());
-    var im = this._getBrowserInputMethod();
-    this._saveTabInputMethod(firstTab, im);
+    // var firstTab = this._getCurrentTab(getBrowser());
+    // var im = this._getBrowserInputMethod();
+    // this._saveTabInputMethod(firstTab, im);
   },
 
   onWindowFocus: function(e)
   {
     debugging.trace("onWindowFocus");
     this.notifyTabChange(getBrowser());
-    if ( ! e.isBubble )
-      this.notifyWindowChange(true);
+    this.notifyWindowChange(true);
   },
 
   onWindowLoseFocus: function(e)
   {
     debugging.trace("onWindowLoseFocus");
     this.notifyTabChange(getBrowser());
-    if ( ! e.isBubble )
-      this.notifyWindowChange(false);
+    this.notifyWindowChange(false);
   },
 
   onWindowUnload: function(e)
@@ -83,7 +84,7 @@ var tabimswitch = {
     if ( newTab )
     {
       debugging.infoLog("New Tab created: "+tabimswitch._getTabLinkedPageId(newTab));
-      var im = this._defaultInputMethod;
+      var im = this._manager.defaultInputMethod;
       this._saveTabInputMethod(newTab, im);
     }
     else
@@ -130,7 +131,7 @@ var tabimswitch = {
         this._saveTabInputMethod(curTab, curIm);
       }
 
-      this._setBrowserInputMethod(this._defaultInputMethod);
+      this._setBrowserInputMethod(this._manager.defaultInputMethod);
     }
   },
 
@@ -153,6 +154,21 @@ var tabimswitch = {
       {
         debugging.warning("onUrlBarLoseFocus: No current tab now");
       }
+    }
+  },
+
+  onNewNavigator: function(e)
+  {
+    debugging.trace("onNewNavigator");
+    var curTab = this._getCurrentTab(getBrowser());
+    if ( curTab )
+    {
+      curIm = this._getBrowserInputMethod();
+      this._saveTabInputMethod(curTab, curIm);
+    }
+    else
+    {
+      debugging.warning("onNewNavigator: No current tab now");
     }
   },
 
@@ -188,17 +204,34 @@ var tabimswitch = {
   {
     if ( ! this._isWndActive && active )
     {
-      // debugging.debugLog("Window changed from inactive to active.");
-      /* var tab = tabimswitch._getCurrentTab(getBrowser());
+      debugging.debugLog("Window changed from inactive to active.");
+
+      var tab = tabimswitch._getCurrentTab(getBrowser());
       if ( tab )
       {
-        var imc = tabimswitch._getTabIMC(tab);
         debugging.debugLog("Window changed notification, active tab: "
-             + tabimswitch._getTabLinkedPageId(tab) + "[" + (imc?imc.debugId:-1) + "]" );
+             + tabimswitch._getTabLinkedPageId(tab));
 
-        this._setCurrentIMC(tab);
-      }*/
+        var im = tabimswitch._getTabInputMethod(tab);
+        this._setBrowserInputMethod(im);
+        this._currentTab = tab;
+      }
     }
+    else if ( this._isWndActive && !active )
+    {
+      debugging.debugLog("Window changed from active to inactive.");
+
+      var tab = tabimswitch._getCurrentTab(getBrowser());
+      if ( tab )
+      {
+        var tabIm = this._getBrowserInputMethod();
+        this._saveTabInputMethod(tab, tabIm);
+        this._currentTab = tab;
+
+        debugging.debugLog("Window lost focus, save IM for last active tab: <"
+             + tabimswitch._getTabLinkedPageId(tab) + "," + tabIm +">");
+      }
+     }
 
     this._isWndActive = active;
   },
@@ -240,10 +273,22 @@ var tabimswitch = {
       return;
     }
 
-    this._defaultInputMethod = this._getBrowserInputMethod();
+    this._manager = this._createInputMethodManager();
+    if ( this._manager == null )
+    {
+      debugging.fatalError("init failed: cannot get TabImSwitch Application object.");
+      this.initialized = false;
+      return;
+    }
+
+    if ( this._manager.defaultInputMethod == null )
+    {
+      this._manager.defaultInputMethod = this._getBrowserInputMethod();
+    }
 
     this._registerURLBarEvent();
     this._registerTabEventListeners();
+    this._registerCommandEvent();
 
     this._delayedInitSucceeded = true;
 
@@ -286,7 +331,7 @@ var tabimswitch = {
       curImName = this._app.currentKeyboardLayoutName;
       if ( curImName )
       {
-        debugging.debugLog("Browser Input Method is " + curImName);
+        debugging.trace("Browser Input Method is " + curImName);
         return curImName;
       }
       else
@@ -308,24 +353,33 @@ var tabimswitch = {
   _getTabInputMethod: function(tab)
   {
     if ( ! tab ) return null;
+    if ( ! this._manager ) return null;
 
     if ( this._inputMethodMap )
     {
       tabName = this._getTabLinkedPageId(tab);
       if ( tabName )
       {
-        var im = this._inputMethodMap[tabName];
-        debugging.infoLog("Get tab input method: <"+tabName+","+im+">");
-        return im;
+        try
+        {
+          var im = this._manager.getTabInputMethod(tabName);
+          debugging.infoLog("Get tab input method: <"+tabName+","+im+">");
+          return im;
+        }
+        catch (ex)
+        {
+          debugging.warning("Not able to get input method for <"+tabName+">");
+          return null;
+        }
       }
       else
       {
-        debugging.error("_getTabIMC failed: tab does not have a linked page.")
+        debugging.error("_getTabInputMethod failed: tab does not have a linked page.")
       }
     }
     else
     {
-      debugging.error("_getTabIMC failed: _inputMethodMap not defined.");
+      debugging.error("_getTabInputMethod failed: _inputMethodMap not defined.");
     }
 
     return null;
@@ -333,6 +387,8 @@ var tabimswitch = {
 
   _saveTabInputMethod: function(tab, im)
   {
+    if ( ! this._manager ) return;
+
     if ( tab )
     {
       if ( im != null )
@@ -342,8 +398,15 @@ var tabimswitch = {
           tabName = this._getTabLinkedPageId(tab);
           if ( tabName )
           {
-            this._inputMethodMap[tabName] = im;
-            debugging.infoLog("Save tab Input Method: <"+tabName+","+im+">");
+            try
+            {
+              this._manager.setTabInputMethod(tabName, im);
+              debugging.infoLog("Save tab Input Method: <"+tabName+","+im+">");
+            }
+            catch (ex )
+            {
+              debugging.warning("Not able to save tab input method <"+tabName+","+im+">");
+            }
           }
           else
           {
@@ -387,6 +450,22 @@ var tabimswitch = {
     return null;
   },
 
+  _createInputMethodManager: function()
+  {
+    try
+    {
+      var cid = "@tabimswitch.sourceforge.net/manager;1";
+      var obj = Components.classes[cid].createInstance();
+      obj = obj.QueryInterface(Components.interfaces.ITabInputMethodManager);
+      return obj;
+    }
+    catch (ex)
+    {
+      debugging.fatalError("Cannot create TabInputMethodManager: "+ex.message);
+      return null;
+    }
+  },
+
   _registerWindowEventListeners: function()
   {
     window.addEventListener("load", function(e){tabimswitch.onWindowLoad(e);}, false);
@@ -413,6 +492,12 @@ var tabimswitch = {
     var url = document.getElementById("urlbar");
     url.addEventListener("focus", function(e){tabimswitch.onUrlBarFocus(e);}, true);
     url.addEventListener("blur", function(e){tabimswitch.onUrlBarLoseFocus(e);}, true);
+  },
+
+  _registerCommandEvent: function()
+  {
+    var cmdNewWin = document.getElementById("cmd_newNavigator");
+    cmdNewWin.addEventListener("command", function(e){tabimswitch.onNewNavigator(e);},false);
   },
 
   _getWindowFromObj: function(obj)

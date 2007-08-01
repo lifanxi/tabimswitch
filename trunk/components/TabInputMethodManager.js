@@ -31,12 +31,10 @@ const CONTRACT_ID = "@tabimswitch.sourceforge.net/manager;1";
 ***********************************************************/
 
 //class constructor
-function TabInputMethodManager() {
-  this._imMap = new Array();
-};
+var TabInputMethodManager = {
 
-// class definition
-TabInputMethodManager.prototype = {
+  _imMap : [],
+  _defaultIm : null,
 
   // ITabInputMethodManager interface implementation
   setTabInputMethod: function(tabKey, inputMethod)
@@ -47,6 +45,16 @@ TabInputMethodManager.prototype = {
   getTabInputMethod: function(tabKey)
   {
     return this._imMap[tabKey];
+  },
+
+  get defaultInputMethod()
+  {
+    return this._defaultIm;
+  },
+
+  set defaultInputMethod(im)
+  {
+    this._defaultIm = im;
   },
 
   QueryInterface: function(aIID)
@@ -77,7 +85,7 @@ var TabInputMethodManagerFactory = {
     if (aOuter != null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
 
-    return (new TabInputMethodManager()).QueryInterface(aIID);
+    return TabInputMethodManager;// .QueryInterface(aIID);
   }
 };
 
