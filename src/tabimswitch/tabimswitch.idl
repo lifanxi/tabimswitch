@@ -17,4 +17,6 @@ interface ITabInputMethodManager : nsISupports
 {
   void setTabInputMethod(in string tabKey, in string inputMethod);
   string getTabInputMethod(in string tabKey);
+
+  attribute string defaultInputMethod;
 };
