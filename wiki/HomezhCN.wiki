@@ -1,4 +1,4 @@
-#labels Featured,Phase-Support,Home,zh-CN
+#labels Phase-Support,Home,zh-CN
 TabIMSwitch是一个FireFox的扩展。这个扩展可以记录!FireFox的每个标签页的输入法状态，并且在标签页进行切换的时候自动进行输入法的切换。同时，它可以支持在地址栏输入的时候自动禁用输入法。
 
 对于大多数东亚用户，例如中国/韩国/日本的用户，为了输入文字，必须使用输入法。但是!FireFox 2.0的输入法支持并不好：整个!FireFox仅有一个输入法状态，输入法不会根据当前的状态进行智能的切换。例如，用户可以打开了很多个标签页，一个正在用开启中文输入法写blog，一个用英文输入法写wiki，还有一个开启着日文输入法和朋友聊天（通过Google Talk online）。在这种时候，当用户切换标签页的时候，他们期望输入法可以自动的切换，但是!FireFox 2.0并不支持。
