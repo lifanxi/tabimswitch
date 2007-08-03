@@ -1,9 +1,0 @@
-#!/usr/bin/bash
-# Build config for build.sh
-APP_NAME=tabimswitch
-CHROME_PROVIDERS="content locale skin"
-CLEAN_UP=1
-ROOT_FILES=
-ROOT_DIRS="defaults components"
-BEFORE_BUILD=./incBuild.pl
-AFTER_BUILD=
