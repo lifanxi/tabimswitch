@@ -1,26 +1,27 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
-<RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-          xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
-   <RDF:Description RDF:about="urn:mozilla:extension:TabIMSwitch@ftofficer">
+   <Description about="urn:mozilla:extension:TabImSwitch@ftofficer">
      <em:updates>
-       <RDF:Seq>
-         <RDF:li RDF:resource="urn:mozilla:extension:TabIMSwitch@ftofficer:1.0.0.5"/>
-       </RDF:Seq>
+       <Seq>
+         <li resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.0.0.5"/>
+       </Seq>
      </em:updates>
-   </RDF:Description>
+   </Description>
 
-   <RDF:Description RDF:about="urn:mozilla:extension:TabIMSwitch@ftofficer:1.0.0.5">
+   <Description about="urn:mozilla:extension:TabImSwitch@ftofficer:1.0.0.5">
      <em:version>1.0.0.5</em:version>
      <em:targetApplication>
-       <RDF:Description>
+       <Description>
          <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
          <em:minVersion>2.0</em:minVersion>
          <em:maxVersion>2.0.0.*</em:maxVersion>
          <em:updateLink>http://tabimswitch.googlecode.com/files/tabimswitch-1.0.0.5.xpi</em:updateLink>
-       </RDF:Description>
+         <em:updateHash>sha1:cbebe3be0541e80abebfd0aa5f85a7d7377b63d9</em:updateHash>
+       </Description>
      </em:targetApplication>
-   </RDF:Description>
+   </Description>
 
-</RDF:RDF>
+</RDF>
