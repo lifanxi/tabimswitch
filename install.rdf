@@ -8,7 +8,7 @@
     <em:creator>ftofficer</em:creator>
     <em:description>Save the Input Method of each Tab and change it accordingly when switching tabs</em:description>
     <em:homepageURL>http://tabimswitch.googlecode.com</em:homepageURL>
-    <em:updateURL>http://tabimswitch.googlecode.com/files/tabimswitch.xpi</em:updateURL>
+    <em:updateURL>http://tabimswitch.googlecode.com/files/update.rdf</em:updateURL>
     <em:aboutURL>chrome://tabimswitch/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://tabimswitch/content/tabimswitch.png</em:iconURL>
     <em:targetApplication>
