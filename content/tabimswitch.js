@@ -31,9 +31,6 @@ var tabimswitch = {
 
   _urlBarFocused : false,
 
-  _app : null,
-  _manager : null,
-
   //
   // Firefox event handlers
   //
