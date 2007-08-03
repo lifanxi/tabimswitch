@@ -4,7 +4,7 @@
 #include <windows.h>
 #include "tabimswitch.h"
 
-#define TABIMSWITCH_APP_CONTRACTID "@tabimswitch.sourceforge.net/application;1"
+#define TABIMSWITCH_APP_CONTRACTID "@tabimswitch.googlecode.com/application;1"
 #define TABIMSWITCH_APP_CLASSNAME "TabImSwitchApp"
 /* 1efb2b80-1908-4dde-a9bd-ccadef225069 */
 #define TABIMSWITCH_APP_CID { 0x1efb2b80, 0x1908, 0x4dde, \

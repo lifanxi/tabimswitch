@@ -24,7 +24,7 @@ const CLASS_ID = Components.ID("{d047ba54-da67-402c-a067-193829ff8699}");
 const CLASS_NAME = "TabIMSwitch Input Method Manager";
 
 // textual unique identifier
-const CONTRACT_ID = "@tabimswitch.sourceforge.net/manager;1";
+const CONTRACT_ID = "@tabimswitch.googlecode.com/manager;1";
 
 /***********************************************************
  class definition

@@ -49,14 +49,16 @@ var tabimswitch = {
   {
     debugging.trace("onWindowFocus");
     this.notifyTabChange(getBrowser());
-    this.notifyWindowChange(true);
+    // if ( ! e.bubbles )
+      this.notifyWindowChange(true);
   },
 
   onWindowLoseFocus: function(e)
   {
     debugging.trace("onWindowLoseFocus");
     this.notifyTabChange(getBrowser());
-    this.notifyWindowChange(false);
+    // if ( ! e.bubbles )
+      this.notifyWindowChange(false);
   },
 
   onWindowUnload: function(e)
@@ -199,6 +201,9 @@ var tabimswitch = {
 
   notifyWindowChange: function(active)
   {
+    if ( this._urlBarFocused )
+      return;
+
     if ( ! this._isWndActive && active )
     {
       debugging.debugLog("Window changed from inactive to active.");
@@ -281,6 +286,10 @@ var tabimswitch = {
     if ( this._manager.defaultInputMethod == null )
     {
       this._manager.defaultInputMethod = this._getBrowserInputMethod();
+    }
+    else
+    {
+      this._setBrowserInputMethod(this._manager.defaultInputMethod);
     }
 
     this._registerURLBarEvent();
@@ -433,7 +442,7 @@ var tabimswitch = {
   {
     try
     {
-      var cid = "@tabimswitch.sourceforge.net/application;1";
+      var cid = "@tabimswitch.googlecode.com/application;1";
       var obj = Components.classes[cid].createInstance();
       obj = obj.QueryInterface(Components.interfaces.ITabImSwitchApp);
       return obj;
@@ -451,7 +460,7 @@ var tabimswitch = {
   {
     try
     {
-      var cid = "@tabimswitch.sourceforge.net/manager;1";
+      var cid = "@tabimswitch.googlecode.com/manager;1";
       var obj = Components.classes[cid].createInstance();
       obj = obj.QueryInterface(Components.interfaces.ITabInputMethodManager);
       return obj;
