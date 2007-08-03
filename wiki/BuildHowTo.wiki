@@ -1,8 +1,4 @@
 #labels Phase-Implementation,Build,HOWTO
-# How to build the project
-
-* This Page is not finished yet! *
-
 = How to Build TabIMSwitch =
 You can check out source code of TabIMSwitch and build it by yourself.
 
