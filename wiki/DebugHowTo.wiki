@@ -1,0 +1,4 @@
+#labels Phase-Implementation,Debug,HOWTO
+#How to debug TabIMSwitch
+
+_*Not finished Yet!*_
