@@ -39,7 +39,7 @@ BEFORE_BUILD=      # run this before building       (bash command)
 AFTER_BUILD=       # ...and this after the build    (bash command)
 
 if [ -z $1 ]; then
-  . ./config_build.sh
+  . ./default
 else
   . $1
 fi
