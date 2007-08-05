@@ -9,8 +9,11 @@ _*Task 1: Adding more detailed input method control to TabIMSwitch*_
 == Comments of Input Methods ==
 
 1. Chinese Input Method (MSPY) in fullshape mode and non-fullshape mode
-  * fullshape mode: [http://tabimswitch.googlecode.com/files/im-chinese-fullshape-mode.PNG]
-  * non-fullshape mode: []
+  * fullshape mode: [http://tabimswitch.googlecode.com/files/im-chinese-fullshape-mode.png]
+  * non-fullshape mode: [http://tabimswitch.googlecode.com/files/im-chinese-non-fullshape-mode.png]
+
 2. Japanese Input Method (Natural) in Hiragana mode and Katagana mode
-  * Hiragana mode:
-  * Katagana mode:
+  * Hiragana mode: [http://tabimswitch.googlecode.com/files/im-japanese-hiragana-mode.png]
+  * Katagana mode: [http://tabimswitch.googlecode.com/files/im-japanese-katagana-mode.png]
+
+
