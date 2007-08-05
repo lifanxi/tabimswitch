@@ -61,4 +61,4 @@ Open Cygwin shell, and change directory to `$(SRC_ROOT)`, type the following com
 
 If you can see the tabimswitch.xpi file at `$(SRC_ROOT)`, congratulations, your own version of TabIMSwitch is built!
 
-For more information, please refer to [http://developer.mozilla.com Mozilla Developer Center].
+For more information, please refer to [http://developer.mozilla.org Mozilla Developer Center].
