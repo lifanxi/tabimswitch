@@ -1,0 +1,8 @@
+#labels Contributors,Featured
+The project was originally created by Zhang Cong (ftofficer) <ftofficer.zhangc AT gmail.com>
+
+Li Fanxi <lifanxi AT gmail.com> was the first user of this utility, and gave many useful suggestions.
+
+Wu Xiaoshu <Xioashu.wu AT gmail.com> contributes on Linux SCIM platform porting.
+
+Lin Ziyuan <ziyuang AT gmail.com> translated some wiki pages to Japanese.
