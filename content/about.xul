@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   - Copyright (c) 2007 ftofficer
   -
@@ -28,9 +28,9 @@
   <text value="ftofficer"/>
   <separator class="thin"/>
       <text value="&homepage;" style="font-weight: bold;"/>
-    <text value="http://tabimswitch.googlepages.com"
+    <text value="http://tabimswitch.googlecode.com"
           class="url"
-        onclick="window.open('http://tabimswitch.googlepages.com'); window.close();"/>
+        onclick="window.open('http://tabimswitch.googlecsode.com'); window.close();"/>
   <separator class="thin"/>
 </vbox>
 </groupbox>

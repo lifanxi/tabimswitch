@@ -39,10 +39,6 @@ var tabimswitch = {
     debugging.trace("onWindowLoad");
 
     this._delayedInit();
-
-    // var firstTab = this._getCurrentTab(getBrowser());
-    // var im = this._getBrowserInputMethod();
-    // this._saveTabInputMethod(firstTab, im);
   },
 
   onWindowFocus: function(e)
@@ -251,7 +247,7 @@ var tabimswitch = {
     this._app = null;
     this._inputMethodMap = new Array();
 
-    this._registerWindowEventListeners();
+    this._registerDelayedInitEvent();
 
     this.initialized = true;
   },
@@ -292,9 +288,10 @@ var tabimswitch = {
       this._setBrowserInputMethod(this._manager.defaultInputMethod);
     }
 
-    this._registerURLBarEvent();
+    this._registerWindowEventListeners();
+    this._registerURLBarEventListeners();
     this._registerTabEventListeners();
-    this._registerCommandEvent();
+    this._registerCommandEventListeners();
 
     this._delayedInitSucceeded = true;
 
@@ -472,12 +469,16 @@ var tabimswitch = {
     }
   },
 
-  _registerWindowEventListeners: function()
+  _registerDelayedInitEvent: function()
   {
     window.addEventListener("load", function(e){tabimswitch.onWindowLoad(e);}, false);
+  },
+
+  _registerWindowEventListeners: function()
+  {
+    window.addEventListener("unload", function(e){tabimswitch.onWindowUnload(e);}, false);
     window.addEventListener("focus", function(e){tabimswitch.onWindowFocus(e);}, false);
     window.addEventListener("blur", function(e){tabimswitch.onWindowLoseFocus(e);}, true);
-    window.addEventListener("unload", function(e){tabimswitch.onWindowUnload(e);}, false);
   },
 
   _registerTabEventListeners: function()
@@ -493,14 +494,14 @@ var tabimswitch = {
     container.addEventListener("TabSelect", function(e){tabimswitch.onTabSelectChange(e);}, false);
   },
 
-  _registerURLBarEvent: function()
+  _registerURLBarEventListeners: function()
   {
     var url = document.getElementById("urlbar");
     url.addEventListener("focus", function(e){tabimswitch.onUrlBarFocus(e);}, true);
     url.addEventListener("blur", function(e){tabimswitch.onUrlBarLoseFocus(e);}, true);
   },
 
-  _registerCommandEvent: function()
+  _registerCommandEventListeners: function()
   {
     var cmdNewWin = document.getElementById("cmd_newNavigator");
     cmdNewWin.addEventListener("command", function(e){tabimswitch.onNewNavigator(e);},false);
