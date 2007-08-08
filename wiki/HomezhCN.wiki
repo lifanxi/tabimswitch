@@ -1,5 +1,5 @@
 #labels Phase-Support,Home,zh-CN
-其他语言：[http://tabimswitch.googlecode.com English]
+其他语言：*[http://tabimswitch.googlecode.com English]* *[HomeJa 日本語]*
 
 TabIMSwitch是一个FireFox的扩展。这个扩展可以记录!FireFox的每个标签页的输入法状态，并且在标签页进行切换的时候自动进行输入法的切换。同时，它可以支持在地址栏输入的时候自动禁用输入法。
 
