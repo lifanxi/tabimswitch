@@ -19,7 +19,7 @@
          <em:minVersion>2.0</em:minVersion>
          <em:maxVersion>2.0.0.*</em:maxVersion>
          <em:updateLink>http://tabimswitch.googlecode.com/files/tabimswitch-1.0.0.9.xpi</em:updateLink>
-         <em:updateHash>sha1:f29f84c80c2daa93e6fe6c60b572b3fd7697ec7d</em:updateHash>
+         <em:updateHash>sha1:3c4044c7c3f31450bcc3b39c16539c1422162a43</em:updateHash>
        </Description>
      </em:targetApplication>
    </Description>
