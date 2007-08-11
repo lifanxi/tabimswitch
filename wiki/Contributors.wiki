@@ -1,8 +1,23 @@
 #labels Contributors,Featured
-The project was originally created by Zhang Cong (ftofficer) <ftofficer.zhangc AT gmail.com>
+= Contributors of TabIMSwitch project =
 
-Li Fanxi <lifanxi AT gmail.com> was the first user of this utility, and gave many useful suggestions.
+  * The project was originally created by Zhang Cong (ftofficer) <ftofficer.zhangc AT gmail.com>
+  * Li Fanxi <lifanxi AT gmail.com> was the first user of this utility, and gave many useful suggestions.
+  * Wu Xiaoshu <Xioashu.wu AT gmail.com> contributes on Linux SCIM platform porting research.
+  * Lin Ziyuan <ziyuang AT gmail.com> translated some wiki pages to Japanese.
+  * The friends from [http://forums.mozine.cn/index.php?showtopic=17833 Mozine China Forum] contributed much on testing the early unstable versions, and helping to do localization, especially
+    * [http://forums.mozine.cn/index.php?showuser=3 dudu8995]
+    * [http://forums.mozine.cn/index.php?showuser=45135 湘雪龙]
+  * The friends from [http://www.newsmth.net SMTH BBS] and [http://bbs.ustc.edu.cn USTC BBS] also contributed on testing early unstable versions.
 
-Wu Xiaoshu <Xioashu.wu AT gmail.com> contributes on Linux SCIM platform porting.
+_Chinese at the following_
+= TabIMSwitch 项目的贡献者 =
 
-Lin Ziyuan <ziyuang AT gmail.com> translated some wiki pages to Japanese.
+  * 本项目由Zhang Cong(ftofficer) <ftofficer.zhangc AT gmail.com> 创建。
+  * Li Fanxi <lifanxi AT gmail.com> 最先使用了这个扩展，并且对于功能提出了很多的意见。
+  * Wu Xiaoshu <Xioashu.wu AT gmail.com> 正在研究将扩展移植到Linux SCIM平台上的问题。
+  * Lin Ziyuan <ziyuang AT gmail.com> 将一些wiki页翻译成了日文
+  * 来自[http://forums.mozine.cn/index.php?showtopic=17833 Mozine中国论坛]的网友帮助测试了早期的不稳定版本，并帮助进行了本地化工作，尤其感谢下面的网友做出的贡献
+    * [http://forums.mozine.cn/index.php?showuser=3 dudu8995]
+    * [http://forums.mozine.cn/index.php?showuser=45135 湘雪龙]
+  * 来自[http://www.newsmth.net 水木社区BBS] and [http://bbs.ustc.edu.cn 瀚海星云BBS]的网友也帮助了早期不稳定版本的测试工作。
