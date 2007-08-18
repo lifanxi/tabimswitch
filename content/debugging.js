@@ -14,6 +14,63 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * */
 
+var consoleWriter = {
+
+  init: function()
+  {
+    if ( this.logger )
+      return;
+      
+    try
+    {
+      this.logger = Components.classes["@mozilla.org/consoleservice;1"]
+                          .getService(Components.interfaces.nsIConsoleService);
+    }
+    catch(e)
+    {
+      this.logger = null;
+      Components.reportError(e);
+    }
+  },
+  
+  writeLog: function(level, msg)
+  {
+    if ( this.logger )
+      this.logger.logStringMessage(msg);
+  },
+  
+  __dummy:function(){}
+};
+
+var debugFileWriter = {
+  init: function(level, file)
+  {
+    try
+    {
+      this.logger = Components.classes["@tabimswitch.googlecode.com/logger;1"]
+                          .getService(Components.interfaces.IDebugLogger);
+      if ( this.logger )
+      {
+        this.logger.init(file);
+        this.logger.logLevel = level;
+      }
+    }
+    catch (ex)
+    {
+      this.logger = null;
+      Components.reportError(e);
+    }
+  },
+  
+  writeLog: function(level, msg)
+  {
+    if (this.logger)
+      this.logger.writeLog(level, msg);  
+  },
+  
+  __dummy:function(){}
+};
+
 //
 // Debugging support object.
 //
@@ -25,6 +82,9 @@ var debugging = {
   LOG_INFO:  3,
   LOG_DEBUG: 4,
   LOG_TRACE: 5,
+  
+  _debugLevel: 0,
+  _debugPrefix: "",
 
   _logLevelName: ['Fatal', 'Error', 'Warning', 'Information', 'Debugging', 'Tracing'],
 
@@ -36,20 +96,16 @@ var debugging = {
     if ( level > this._debugLevel )
       return;
 
-    try
-    {
-      var log = Components.classes["@mozilla.org/consoleservice;1"]
-                          .getService(Components.interfaces.nsIConsoleService);
-      log.logStringMessage(this._prefix+": ["+this._logLevelName[level]+"] "+message);
-    }
-    catch(e)
-    {
-      Components.reportError(e);
-    }
+    if ( this._writer )
+      this._writer.writeLog(level, this._prefix+": ["+this._logLevelName[level]+"] "+message);
   },
 
-  init : function(prefix, level)
+  init : function(prefix, level, writer)
   {
+    this._writer = writer;
+    if ( ! this._writer )
+      this._writer = consoleWriter;
+
     this._prefix = prefix;
     this._debugLevel = level;
   },
@@ -63,5 +119,3 @@ var debugging = {
 
   __dummy : function() {}
 };
-
-debugging.init("TabImSwitch", debugging.LOG_WARN);

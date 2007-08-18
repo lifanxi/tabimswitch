@@ -9,6 +9,14 @@ interface ITabImSwitchApp : nsISupports
   attribute AString currentKeyboardLayoutName;
 };
 
+[scriptable, uuid(cb6c1b65-e377-42f6-8f9d-6b5ce67350ff)]
+interface IDebugLogger : nsISupports
+{
+  void init(in string logFile);
+  attribute long logLevel;
+  void writeLog(in long level, in string message);
+};
+
 //
 // These interfaces will be implemented in JavaScript
 //
@@ -20,3 +28,4 @@ interface ITabInputMethodManager : nsISupports
 
   attribute string defaultInputMethod;
 };
+

@@ -7,8 +7,10 @@
 #include <nsIGenericFactory.h>
 
 #include "TabImSwitchApp.h"
+#include "DebugLogger.h"
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(CTabImSwitchApp)
+NS_GENERIC_FACTORY_CONSTRUCTOR(CDebugLogger)
 
 static nsModuleComponentInfo components[] =
 {
@@ -17,6 +19,13 @@ static nsModuleComponentInfo components[] =
     TABIMSWITCH_APP_CID,
     TABIMSWITCH_APP_CONTRACTID,
     CTabImSwitchAppConstructor
+  },
+
+  {
+    TABIMSWITCH_DEBUG_LOGGER_CLASSNAME, 
+    TABIMSWITCH_DEBUG_LOGGER_CID,
+    TABIMSWITCH_DEBUG_LOGGER_CONTRACTID,
+    CDebugLoggerConstructor
   },
 };
 

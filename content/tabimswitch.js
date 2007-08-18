@@ -16,6 +16,75 @@
 
 var idx = 0;
 
+var prefObserver =
+{
+  init: function()
+  {
+    this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
+       .getService(Components.interfaces.nsIPrefService)
+       .getBranch("extensions.tabimswitch.");       
+    this.prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
+    this.prefs.addObserver("", prefObserver, false);
+
+    this._loadInitPref();
+  },
+  
+  observe: function(subject, topic, data)
+  {
+    if (topic != "nsPref:changed")
+      return;
+    
+    if(    data =="debug.level" 
+        || data == "debug.prefix"
+        || data == "debug.log_to_file" )
+    {
+      this._updateDebugPref();
+    }
+  },
+  
+  _loadInitPref: function()
+  {
+    if ( ! this.prefs )
+      return;
+      
+    this._updateDebugPref();
+  },
+
+  _updateDebugPref: function()
+  {
+    this.debugLevel = this.prefs.getIntPref("debug.level");
+    this.debugPrefix = this.prefs.getCharPref("debug.prefix");
+    this.logToFile = this.prefs.getBoolPref("debug.log_to_file");
+        
+    if ( this.logToFile )
+    {
+      try
+      {
+        var file = Components.classes["@mozilla.org/file/directory_service;1"]
+                       .getService(Components.interfaces.nsIProperties)
+                       .get("ProfD", Components.interfaces.nsIFile);
+        file.append("tabimswitch-debuglog.txt");
+        this.logFilePath = file.path;
+      }
+      catch (e) 
+      {
+        this.logToFile = false;
+        this.logFilePath = null;
+      }
+    }
+    
+    tabimswitch.updateDebugSystem();
+  },
+  
+  //
+  // Members accessable from tabimswitch.
+  //
+  debugLevel: 2,
+  debugPrefix: "TabImSwitch",
+
+  __dummy: function(){}
+};
+
 var tabimswitch = {
 
   //
@@ -37,8 +106,8 @@ var tabimswitch = {
   onWindowLoad: function(e)
   {
     debugging.trace("onWindowLoad");
-
     this._delayedInit();
+    this._removeDelayedInitEvent();
   },
 
   onWindowFocus: function(e)
@@ -263,6 +332,8 @@ var tabimswitch = {
     if ( this._delayedInitSucceeded )
       return;
 
+    prefObserver.init();
+
     this._app = this._getTabImSwitchApp();
     if ( this._app == null )
     {
@@ -296,6 +367,20 @@ var tabimswitch = {
     this._delayedInitSucceeded = true;
 
     return;
+  },
+  
+  updateDebugSystem: function()
+  {
+    if ( prefObserver.logToFile )
+    {
+      debugFileWriter.init(prefObserver.debugLevel, prefObserver.logFilePath);
+      debugging.init(prefObserver.debugPrefix, prefObserver.debugLevel, debugFileWriter);
+    }
+    else
+    {
+      consoleWriter.init();
+      debugging.init(prefObserver.debugPrefix, prefObserver.debugLevel, consoleWriter);
+    }
   },
 
   //
@@ -471,7 +556,14 @@ var tabimswitch = {
 
   _registerDelayedInitEvent: function()
   {
-    window.addEventListener("load", function(e){tabimswitch.onWindowLoad(e);}, false);
+    window.addEventListener("load", tabimswitch._delayInitListener, false);
+  },
+
+  _delayInitListener: function(e) {tabimswitch.onWindowLoad(e);},
+  
+  _removeDelayedInitEvent: function()
+  {
+    window.removeEventListener("load", tabimswitch._delayInitListener, false);
   },
 
   _registerWindowEventListeners: function()
