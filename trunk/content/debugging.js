@@ -55,7 +55,7 @@ var debugFileWriter = {
         this.logger.logLevel = level;
       }
     }
-    catch (ex)
+    catch (e)
     {
       this.logger = null;
       Components.reportError(e);
