@@ -1,0 +1,38 @@
+#include "nsISupports.idl"
+
+//
+// These interfaces will be implemented in C++.
+//
+[scriptable, uuid(42bdc316-7d74-4205-a96d-3efafac123fb)]
+interface ISystemInputMethodManager : nsISupports
+{
+  readonly attribute AString inputMethodList;
+  readonly attribute char listSeparator;
+};
+
+[scriptable, uuid(081f8e2a-8c1a-4149-9de7-6d75f716825e)]
+interface ITabImSwitchApp : nsISupports
+{
+  attribute AString currentKeyboardLayoutName;
+};
+
+[scriptable, uuid(cb6c1b65-e377-42f6-8f9d-6b5ce67350ff)]
+interface IDebugLogger : nsISupports
+{
+  void init(in string logFile);
+  attribute long logLevel;
+  void writeLog(in long level, in string message);
+};
+
+//
+// These interfaces will be implemented in JavaScript
+//
+[scriptable, uuid(f26f72b6-2ba2-4ccc-ba38-a8940e286fc4)]
+interface ITabInputMethodManager : nsISupports
+{
+  void setTabInputMethod(in string tabKey, in string inputMethod);
+  string getTabInputMethod(in string tabKey);
+
+  attribute string defaultInputMethod;
+};
+
