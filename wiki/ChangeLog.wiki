@@ -1,0 +1,29 @@
+#labels Featured,Phase-Support,ChangeLog
+#The change history of TabIMSwitch
+
+=== Version 1.1.0.1 ===
+  * 19, August 2007
+  * Changed the debugging settings to !FireFox preference system.
+  * Added advanced debug logging system to the extension.
+  * [Featured!] Separate multiple language environment support with single language environment, to avoid adding English input method automatically. 
+
+=== Version 1.0.0.9 ===
+  * 9, August 2007 
+  * Fixed a critical error when building the extension: Old extensions are all built with dynamic linking to VS8 CRT lib, which will cause the extension failed to be load. From this version, changed to static link.
+  * Changed the automatic update link, since the old link is not able to be modified.
+  * This is the first stable version which is publicly released on [http://addons.mozine.cn/firefox/610/ mozine.cn]
+
+=== Version 1.0.0.7 ===
+  * 2, August 2007
+  * Fixed some bugs when the input method is not able to change correctly sometimes.
+  * Also added valid update.rdf links in
+
+=== Version 1.0.0.4 ===
+  * 29, July 2007
+  * Added the feature when changing input focus to URL bar, close input method automatically.
+  * This is the first public version.
+
+=== Version 1.0.0.1 ===
+  * 28, July 2007
+  * The first runnable version, from then, TabIMSwitch was born.
+  * The birthday: *28, July 2007, China Standard Time (GMT+08:00)*
