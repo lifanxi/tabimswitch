@@ -40,6 +40,11 @@ var prefObserver =
     {
       this._updateDebugPref();
     }
+    
+    if ( data == "env.multilingual" )
+    {
+      this._updateEnvPref();
+    }
   },
   
   _loadInitPref: function()
@@ -48,6 +53,7 @@ var prefObserver =
       return;
       
     this._updateDebugPref();
+    this._updateEnvPref();
   },
 
   _updateDebugPref: function()
@@ -76,11 +82,27 @@ var prefObserver =
     tabimswitch.updateDebugSystem();
   },
   
+  _updateEnvPref: function()
+  {
+    if ( this.prefs.prefHasUserValue("env.multilingual") )
+    {
+      this.multilingual = this.prefs.getBoolPref("env.multilingual");
+    }
+    else
+    {
+      this.multilingual = null;
+    }
+
+    tabimswitch.updateEnvSettings();
+  },
+  
   //
   // Members accessable from tabimswitch.
   //
   debugLevel: 2,
   debugPrefix: "TabImSwitch",
+  
+  multilingual: false,
 
   __dummy: function(){}
 };
@@ -112,24 +134,29 @@ var tabimswitch = {
 
   onWindowFocus: function(e)
   {
-    debugging.trace("onWindowFocus");
     this.notifyTabChange(getBrowser());
-    // if ( ! e.bubbles )
+    if ( e.target == window )
+    {
+      debugging.trace("onWindowFocus");
       this.notifyWindowChange(true);
+    }
   },
 
   onWindowLoseFocus: function(e)
   {
-    debugging.trace("onWindowLoseFocus");
     this.notifyTabChange(getBrowser());
-    // if ( ! e.bubbles )
+    if ( e.target == window )
+    {
+      debugging.trace("onWindowLoseFocus");
       this.notifyWindowChange(false);
+    }
   },
 
   onWindowUnload: function(e)
   {
     debugging.trace("onWindowUnload");
-    this.notifyTabChange(getBrowser());
+    if ( e.target == window )
+      this.notifyTabChange(getBrowser());
   },
 
   onTabDocLoad: function(e)
@@ -182,7 +209,10 @@ var tabimswitch = {
 
   onUrlBarFocus: function(e)
   {
-    debugging.trace("onUrlBarFocus");
+    if ( e.target != this._urlBar )
+      return;
+
+    debugging.trace("onUrlBarFocus");      
     if ( ! this._urlBarFocused )
     {
       debugging.infoLog("Focused to URL bar");
@@ -201,8 +231,10 @@ var tabimswitch = {
 
   onUrlBarLoseFocus: function(e)
   {
-    debugging.trace("onUrlBarLoseFocus");
+    if ( e.target != this._urlBar )
+      return;
 
+    debugging.trace("onUrlBarLoseFocus");
     if ( this._urlBarFocused )
     {
       debugging.infoLog("URL bar lost focus");
@@ -334,7 +366,6 @@ var tabimswitch = {
 
     prefObserver.init();
 
-    this._app = this._getTabImSwitchApp();
     if ( this._app == null )
     {
       debugging.fatalError("init failed: cannot get TabImSwitch Application object.");
@@ -369,6 +400,9 @@ var tabimswitch = {
     return;
   },
   
+  //
+  // Preference change callback notifications.
+  //
   updateDebugSystem: function()
   {
     if ( prefObserver.logToFile )
@@ -380,6 +414,30 @@ var tabimswitch = {
     {
       consoleWriter.init();
       debugging.init(prefObserver.debugPrefix, prefObserver.debugLevel, consoleWriter);
+    }
+  },
+  
+  updateEnvSettings: function()
+  {
+    var useMultilingual = false;
+    
+    if ( prefObserver.multilingual == null )
+    {
+      useMultilingual = this._isMultilingualEnv();
+      debugging.debugLog("Auto-test multilingual environment: "+(useMultilingual?"yes":"no"));
+    }
+    else
+    {
+      useMultilingual = prefObserver.multilingual;
+    }
+    
+    if ( useMultilingual )
+    {
+      this._app = this._getTabImSwitchAppMultilingual();
+    }
+    else
+    {
+      this._app = this._getTabImSwitchApp();
     }
   },
 
@@ -522,9 +580,18 @@ var tabimswitch = {
   //
   _getTabImSwitchApp: function()
   {
+    return this._getTabImSwitchAppByCID("@tabimswitch.googlecode.com/application;1");
+  },
+
+  _getTabImSwitchAppMultilingual: function()
+  {
+    return this._getTabImSwitchAppByCID("@tabimswitch.googlecode.com/application;2");
+  },
+
+  _getTabImSwitchAppByCID: function(cid)
+  {
     try
     {
-      var cid = "@tabimswitch.googlecode.com/application;1";
       var obj = Components.classes[cid].createInstance();
       obj = obj.QueryInterface(Components.interfaces.ITabImSwitchApp);
       return obj;
@@ -552,6 +619,77 @@ var tabimswitch = {
       debugging.fatalError("Cannot create TabInputMethodManager: "+ex.message);
       return null;
     }
+  },
+  
+  _isMultilingualEnv: function()
+  {
+    var sysMan = null;
+    
+    try
+    {
+      var cid = "@tabimswitch.googlecode.com/system-manager;1";
+      sysMan = Components.classes[cid].createInstance();
+      sysMan = sysMan.QueryInterface(Components.interfaces.ISystemInputMethodManager);
+    }
+    catch (ex)
+    {
+      sysMan = null;
+    }
+    
+    if ( ! sysMan )
+    {
+      debugging.warning("Unable to create SystemInputMethodManager, will use non-multilingual version.");
+      return false;
+    }
+
+    var listOfIM = sysMan.inputMethodList;
+    debugging.debugLog("List of input methods: "+listOfIM);
+    var separator = sysMan.listSeparator;
+    
+    if ( ! listOfIM || ! separator )
+    {
+      debugging.warning("Unable to get IM list, will use non-multilingual version.");
+      return false;
+    }
+
+    var arrayOfIM = listOfIM.split(separator);  // array of input method IDs.
+    var countOfLang = this._countImLanguages(arrayOfIM);  // language count;
+
+    return (countOfLang >= 2);
+  },
+  
+  _countImLanguages: function(arrayOfIM)
+  {
+    var countOfLang = 0;
+    var langStatus = new Array(); // A map contains if a language have been founded.
+    for ( var i=0; i<arrayOfIM.length; ++i )
+    {
+      var imID = arrayOfIM[i];
+      // language name is at the last 4 chars
+      if ( ! imID ) continue;
+      
+      //
+      // Add string "lang" before all keys to avoid them converted to int
+      // which may make large array.
+      //
+      var langID = "lang"+imID.slice(4); 
+      if ( ! langStatus[langID] )
+      {
+        langStatus[langID] = true;
+        countOfLang++;
+      }
+    }
+    
+    //
+    // To fix the status of old TabIMSwitch users.
+    // Because old version of TabIMSwitch users (<=1.0.0.9) will add an English input method
+    // automatically. So if we found that the system has English language (0409) and the
+    // language count is 2, we think that's not multilingual environment.
+    //
+    if ( langStatus["lang0409"] && countOfLang == 2 )
+      countOfLang = 1;
+
+    return countOfLang;
   },
 
   _registerDelayedInitEvent: function()
@@ -588,9 +726,10 @@ var tabimswitch = {
 
   _registerURLBarEventListeners: function()
   {
-    var url = document.getElementById("urlbar");
-    url.addEventListener("focus", function(e){tabimswitch.onUrlBarFocus(e);}, true);
-    url.addEventListener("blur", function(e){tabimswitch.onUrlBarLoseFocus(e);}, true);
+    urlBar = document.getElementById("urlbar");
+    urlBar.addEventListener("focus", function(e){tabimswitch.onUrlBarFocus(e);}, true);
+    urlBar.addEventListener("blur", function(e){tabimswitch.onUrlBarLoseFocus(e);}, true);
+    this._urlBar = urlBar;
   },
 
   _registerCommandEventListeners: function()

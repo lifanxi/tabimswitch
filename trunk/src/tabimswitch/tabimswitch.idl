@@ -3,6 +3,13 @@
 //
 // These interfaces will be implemented in C++.
 //
+[scriptable, uuid(42bdc316-7d74-4205-a96d-3efafac123fb)]
+interface ISystemInputMethodManager : nsISupports
+{
+  readonly attribute AString inputMethodList;
+  readonly attribute char listSeparator;
+};
+
 [scriptable, uuid(081f8e2a-8c1a-4149-9de7-6d75f716825e)]
 interface ITabImSwitchApp : nsISupports
 {

@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SystemImManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\tabimswitch.cpp"
 				>
 			</File>
@@ -229,6 +233,10 @@
 				RelativePath=".\TabImSwitchApp.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TabImSwitchAppMultilingual.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -248,11 +256,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SystemImManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\tabimswitch.h"
 				>
 			</File>
 			<File
 				RelativePath=".\TabImSwitchApp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TabImSwitchAppMultilingual.h"
 				>
 			</File>
 			<File
