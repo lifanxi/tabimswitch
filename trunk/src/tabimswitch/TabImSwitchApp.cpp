@@ -5,20 +5,21 @@
 #include <nsStringApi.h>
 #include <Windows.h>
 #include <Shlwapi.h>
-
 #pragma comment(lib, "shlwapi")
+
+#include "NativeCodeLogger.h"
 
 /* Implementation file */
 NS_IMPL_ISUPPORTS1(CTabImSwitchApp, ITabImSwitchApp)
 
 CTabImSwitchApp::CTabImSwitchApp()
 {
-  /* member initializers and constructor code */
+  LOGGER(LOG_DEBUG) << "New instance of TabImSwitchApp is created: " << this << endlog;
 }
 
 CTabImSwitchApp::~CTabImSwitchApp()
 {
-  /* destructor code */
+  LOGGER(LOG_DEBUG) << "TabImSwitchApp destroyed: " << this << endlog;
 }
 
 /* attribute AString currentKeyboardLayoutName; */
@@ -27,6 +28,7 @@ NS_IMETHODIMP CTabImSwitchApp::GetCurrentKeyboardLayoutName(nsAString & aCurrent
   nsAString::char_type kbdLayoutName[KL_NAMELENGTH];
   if ( ::GetKeyboardLayoutNameW(static_cast<LPWSTR>(kbdLayoutName)) )
   {
+    LOGGER(LOG_DEBUG) << "Current Keyboard Layout Name: " << kbdLayoutName << endlog;
     aCurrentKeyboardLayoutName = kbdLayoutName;
   }
 
