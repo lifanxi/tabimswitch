@@ -3,6 +3,12 @@
 
 #include <windows.h>
 #include <vector>
+#include <atlbase.h>
+#include <atlconv.h>
+#include <iomanip>
+using std::setw;
+using std::setfill;
+using std::hex;
 
 CNativeLoggerConfig& CNativeLoggerConfig::instance(void)
 {
@@ -16,11 +22,15 @@ void CNativeLoggerConfig::setLevel(LogLevel level)
   m_level = level;
 }
 
+CLineLogger::CLineLoggerObj::CLineLoggerObj(void)
+: m_logFinished(false)
+{}
+
 CLineLogger::CLineLogger(LogLevel level, char const* srcfile, int srcline)
 : m_level(level)
 , m_srcFile(srcfile)
 , m_srcLine(srcline)
-, m_logFinished(false)
+, m_obj(new CLineLoggerObj())
 {
 }
 
@@ -32,34 +42,30 @@ CLineLogger::~CLineLogger(void)
     finishLog();
 }
 
-void CLineLogger::finishLog(void)
+void CLineLogger::finishLog(void) const
 {
   assert ( ! isLogFinished() );
 
   FileLogger& logger = FileLogger::getLogger();
   if ( shouldPrint() )
-    logger.write(m_srcFile, m_srcLine, m_level, m_message.str().c_str());
+    logger.write(m_srcFile, m_srcLine, m_level, m_obj->m_message.str().c_str());
 
-  m_logFinished = true;
+  m_obj->m_logFinished = true;
 }
 
-CLineLogger& operator<<(CLineLogger& logger, wchar_t const*const wideStr)
+CLineLogger const& operator<<(CLineLogger const& logger, wchar_t const*const wideStr)
 {
   if ( wideStr != NULL )
   {
-    int ansiLength = WideCharToMultiByte(CP_THREAD_ACP, 0, wideStr, -1, NULL, 0, NULL, NULL);
-    if ( ansiLength )
+    try
     {
-      std::vector<char> vAnsiString(ansiLength, '\0');
-      int res = WideCharToMultiByte(CP_THREAD_ACP, 0, wideStr, -1, &vAnsiString[0], ansiLength, NULL, NULL);
-      if ( res )
-      {
-        logger << &vAnsiString[0];
-        return logger;
-      }
+      ATL::CW2A ansiString(wideStr);
+      logger << static_cast<char const*>(ansiString);
     }
-
-    logger << "(UNICODE conversion failed: " << ::GetLastError();
+    catch (ATL::CAtlException& e)
+    {
+      logger << "(UNICODE conversion failure " << reinterpret_cast<void*>(e.m_hr) << ")";
+    }
   }
   else
   {
@@ -69,7 +75,7 @@ CLineLogger& operator<<(CLineLogger& logger, wchar_t const*const wideStr)
   return logger;
 }
 
-CLineLogger& operator<<(CLineLogger& logger, std::wstring const& wideStr)
+CLineLogger const& operator<<(CLineLogger const& logger, std::wstring const& wideStr)
 {
   logger << wideStr.c_str();
   return logger;

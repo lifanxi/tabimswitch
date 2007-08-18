@@ -4,8 +4,6 @@
 #include "TabImSwitchApp.h"
 #include <nsStringApi.h>
 #include <Windows.h>
-#include <Shlwapi.h>
-#pragma comment(lib, "shlwapi")
 
 #include "NativeCodeLogger.h"
 
@@ -25,49 +23,34 @@ CTabImSwitchApp::~CTabImSwitchApp()
 /* attribute AString currentKeyboardLayoutName; */
 NS_IMETHODIMP CTabImSwitchApp::GetCurrentKeyboardLayoutName(nsAString & aCurrentKeyboardLayoutName)
 {
-  nsAString::char_type kbdLayoutName[KL_NAMELENGTH];
-  if ( ::GetKeyboardLayoutNameW(static_cast<LPWSTR>(kbdLayoutName)) )
-  {
-    LOGGER(LOG_DEBUG) << "Current Keyboard Layout Name: " << kbdLayoutName << endlog;
-    aCurrentKeyboardLayoutName = kbdLayoutName;
-  }
+  HKL curKL = ::GetKeyboardLayout(::GetCurrentThreadId());
+  wchar_t strCurKL[16];
+  swprintf_s(strCurKL, L"%08X", curKL);
+  aCurrentKeyboardLayoutName = strCurKL;
+  LOGGER(LOG_DEBUG) << "Current keyboard layout name: " << strCurKL << endlog;
 
   return NS_OK;
 }
 
 NS_IMETHODIMP CTabImSwitchApp::SetCurrentKeyboardLayoutName(const nsAString & aCurrentKeyboardLayoutName)
 {
-  if ( ! aCurrentKeyboardLayoutName.IsEmpty() )
-  {
-    const nsAString::char_type* pKblName = aCurrentKeyboardLayoutName.BeginReading();
-    if ( pKblName == NULL )
-      return NS_ERROR_UNEXPECTED;
+  if ( aCurrentKeyboardLayoutName.IsEmpty() )
+    return NS_ERROR_ILLEGAL_VALUE;
 
-    LPCWSTR pszKblName = static_cast<LPCWSTR>(pKblName);
-    WCHAR primaryKblName[KL_NAMELENGTH];
-
-    const size_t DEVICE_ID_LEN = 5;
-    WCHAR deviceId[DEVICE_ID_LEN] = L"0000";
-    lstrcpynW(deviceId, pKblName, _countof(deviceId));
-    if ( lstrcmpW(deviceId, L"0000") == 0 )
-    {
-      const size_t localeIdOffset = 4;
-      wnsprintfW(primaryKblName, _countof(primaryKblName), L"%s%s", pKblName+localeIdOffset, pKblName+localeIdOffset);
-      pszKblName = primaryKblName;
-    }
-
-    HKL hKeyboadLayout = ::LoadKeyboardLayoutW(pszKblName, 0);
-    if ( hKeyboadLayout != NULL )
-    {
-      HKL hOldKeyboard = ::ActivateKeyboardLayout(hKeyboadLayout, KLF_SETFORPROCESS);
-      if ( hOldKeyboard != NULL )
-      {
-        return NS_OK;
-      }
-    }
-
+  const nsAString::char_type* pKblName = aCurrentKeyboardLayoutName.BeginReading();
+  if ( pKblName == NULL )
     return NS_ERROR_UNEXPECTED;
+
+  HKL theKL = 0;
+  swscanf_s(pKblName, L"%x", &theKL);
+
+  LOGGER(LOG_DEBUG) << "Set current keyboard layout HKL to " << theKL << endlog;
+
+  HKL hOldKL = ::ActivateKeyboardLayout(theKL, KLF_SETFORPROCESS);
+  if ( hOldKL != NULL )
+  {
+    return NS_OK;
   }
 
-  return NS_ERROR_ILLEGAL_VALUE;
+  return NS_ERROR_UNEXPECTED;
 }

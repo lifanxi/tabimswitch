@@ -99,20 +99,19 @@ void FileLogger::write(const char*const srcfile, unsigned int srcline,
   LoggerLocker locker(m_lock);
 
   output << st.wYear << '-' 
-    << setw(2) << setfill('0')
-    << st.wMonth << '-'<< st.wDay << ' '
-    << st.wHour << ':' << st.wMinute << ':' << st.wSecond << '.' 
-    << setw(3) << setfill('0')
-    << st.wMilliseconds << '\t'
+    << setw(2) << setfill('0') << st.wMonth << '-'
+    << setw(2) << setfill('0') << st.wDay << ' '
+    << setw(2) << setfill('0') << st.wHour << ':'
+    << setw(2) << setfill('0') << st.wMinute << ':'
+    << setw(2) << setfill('0') << st.wSecond << '.' 
+    << setw(3) << setfill('0') << st.wMilliseconds << '\t'
     << '[' << ::GetCurrentProcessId() << ':' << ::GetCurrentThreadId() << "]\t"
     << level << '\t' << message << '\t';
 
   if ( srcfile )
-    output << '[' << getShortSrcFile(srcfile) << '(' << srcline << ")]";
+    output << "[N:" << getShortSrcFile(srcfile) << '(' << srcline << ")]";
   else
-    output << "[JavaScript]";
+    output << "[JS]";
 
   output << endl;
-
-  output.flush();
 }
