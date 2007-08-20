@@ -594,6 +594,7 @@ var tabimswitch = {
     {
       var obj = Components.classes[cid].createInstance();
       obj = obj.QueryInterface(Components.interfaces.ITabImSwitchApp);
+      obj.init();
       return obj;
     }
     catch(ex)

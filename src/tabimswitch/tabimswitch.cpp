@@ -8,7 +8,6 @@
 
 #include "SystemImManager.h"
 #include "TabImSwitchApp.h"
-#include "TabImSwitchAppMultilingual.h"
 #include "DebugLogger.h"
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(CSystemInputMethodManager)
