@@ -192,6 +192,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InputMethodContext.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\KeyboardLayout.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LoggerImpl.cpp"
 				>
 			</File>
@@ -229,14 +237,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\TabImSwitchApp.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TabImSwitchAppMultilingual.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -245,6 +245,14 @@
 			>
 			<File
 				RelativePath=".\DebugLogger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InputMethodContext.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KeyboardLayout.h"
 				>
 			</File>
 			<File
@@ -268,7 +276,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TabImSwitchAppMultilingual.h"
+				RelativePath=".\TabImSwitchAppImpl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TabImSwitchAppImpl.inl"
 				>
 			</File>
 			<File

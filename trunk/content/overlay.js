@@ -27,6 +27,11 @@ var tabimswitchOverlay = {
                                 this.strings.getString("helloMessage"));
   },
 
+  reportBug: function(event)
+  {
+    openUILink("chrome://tabimswitch/content/reportBug.xul", event, false, true);
+  },
+
   //
   // Overlay functions
   //

@@ -22,15 +22,21 @@
 
   <script src="debugging.js"/>
   <script src="tabimswitch.js"/>
+  <script src="overlay.js" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="tabimswitch-strings" src="chrome://tabimswitch/locale/tabimswitch.properties"/>
   </stringbundleset>
 
-<!--
   <menupopup id="menu_ToolsPopup">
-    <menuitem id="tabimswitch-options" label="&tabimswitch.label;"
-              oncommand="tabimswitchOverlay.onMenuItemCommand(event);"/>
+    <menu id="menu_TabIMSwitchMenu" label="&tabimswitch.submenu.label;"
+         accesskey="&tabimswitch.submenu.accesskey;" insertafter="javascriptConsole">
+      <menupopup id="menu_TabIMSwitchMenuPopup">
+        <menuitem id="tabimswitch-report-bug" label="&tabimswitch.report.bug.label;"
+            accesskey="&tabimswitch.report.bug.accesskey;"
+            oncommand="tabimswitchOverlay.reportBug(event);"/>
+      </menupopup>
+    </menu>
   </menupopup>
--->
+
 </overlay>
