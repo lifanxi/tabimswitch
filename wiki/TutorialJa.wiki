@@ -1,0 +1,25 @@
+#labels Featured,Phase-Deploy,TutorialJa
+#TabIMSwitchを初めて使うユーザーへの案内
+
+= TabIMSwitchの紹介 =
+
+TabIMSwitchは!FireFoxのある拡張機能ので、!FireFoxに使うことが必要だ。
+
+!Firefoxを使う際に、入力ソフトのサポート不足に悩むことがあるかもしれない。この拡張機能は、!FireFoxが智能的に言語入力ソフトを切り換えることを可能にするために開発された。
+
+
+= 始める方は？ =
+
+TabIMSwitchの使い方はとても易いですから環境設定も不必要です。最新バージョンのTabIMSwitchを[http://code.google.com/p/tabimswitch/downloads/list ダウンロード]し、!FireFoxのウィンドウへドラッグアンドドロップし、「Yes」をクリックしてインストールすると、このツールの長所がそう簡単に感じられる。
+
+= 相違点は？ =
+
+TabIMSwitchをインストールしつつ、!FireFoxには何も変わらないみたいのは？
+
+その通りです。TabIMSwitchは、環境設定の面倒を除きながら真新しい機能を提供する目的で、バックグラウンドの拡張機能のように設計される。その故に余計なGUIがない。
+
+この新しい機能の提供を確かめよう時、chrome://tabimswitch/content/testing.xulをロケーションバーに入力してください。TabIMSwitchのテストページが現れてから、ボタンをクリックするのを通して拡張機能の運行状態を検査できる。
+
+= 使い方は？ =
+
+いつものようにインターネットをブラウズしてください。そして言語入力ソフトをスイッチすれば、先よりもっと手頃だと感じられるかもしれないね。
