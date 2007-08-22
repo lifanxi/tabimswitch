@@ -8,6 +8,9 @@
 
 #include "Uncopyable.h"
 
+#pragma warning(push)
+# pragma warning(disable:4512) //'CLineLogger' : assignment operator could not be generated
+
 enum LogLevel
 {
   LOG_MUST_PRINT = 0,
@@ -28,7 +31,7 @@ public:
   void setLevel(LogLevel level);
 
 private:
-  CNativeLoggerConfig(void): m_level(LOG_WARN) {}
+  CNativeLoggerConfig(void): m_level(LOG_TRACE) {}
 
 private:
   LogLevel m_level;
@@ -91,5 +94,7 @@ extern CLineLogger::EndLogLine_t endlog;
 
 #define LOGGER(level) CLineLogger(level, __FILE__, __LINE__)
 #define DEF_LOGGER(level, var) CLineLogger var(level, __FILE__, __LINE__)
+
+#pragma warning(pop)
 
 #endif // _NATIVVE_CODE_LOGGER_H_

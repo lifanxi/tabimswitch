@@ -12,6 +12,9 @@
 
 class FileLogger;
 
+#pragma warning(push)
+# pragma warning(disable:4512) // 'CDebugLogger' : assignment operator could not be generated
+
 class CDebugLogger : public IDebugLogger
 {
 public:
@@ -26,5 +29,7 @@ private:
 protected:
   FileLogger& m_logger;
 };
+
+#pragma warning(pop)
 
 #endif // __TABIMSWITCH_DEBUG_LOG_H__
