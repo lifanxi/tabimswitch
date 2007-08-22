@@ -9,17 +9,16 @@ When you are using !FireFox, you may have suffered inconvinent caused by the lac
 
 = How to Start =
 
-The TabIMSwitch is so simple that no configuration is needed. Just [http://code.google.com/p/tabimswitch/downloads/list download] the current version of TabIMSwitch and drag-and-drop it to your !FireFox window, click Yes to install the extension, and you can get the benifit of this tool!
+The TabIMSwitch is so simple that no configuration is needed. Just [http://code.google.com/p/tabimswitch/downloads/list download] the current version of TabIMSwitch and drag-and-drop it to your !FireFox window, click Yes to install the extension, and you can get the benefit of this tool!
 
 = What's the Different? =
 
 After installed the TabIMSwitch, seems nothing changed for !FireFox?
 
-Yes. TabIMSwitch is designed as a background extension, it just provide new features without 
-bother you about configuring it. So there are no additional GUI for it.
+Yes. TabIMSwitch is designed as a background extension, it just provide new features without bother you about configuring it. So there are no additional GUI for it.
 
 To know if the new function is provided, type chrome://tabimswitch/content/testing.xul in your address bar, and you will see a testing page for TabIMSwitch. By clicking the buttons on it, you can see if it works or not.
 
 = How to Use? =
 
-Browse the Internet and use the !FireFox as usual. But you may feel more convinient about switching the input method.
+Browse the Internet and use the !FireFox as usual. But you may feel more convenient about switching the input method.
