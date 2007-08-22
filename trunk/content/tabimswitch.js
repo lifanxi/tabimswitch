@@ -33,6 +33,8 @@ var prefObserver =
   {
     if (topic != "nsPref:changed")
       return;
+
+    debugging.infoLog("Preference changed.");
     
     if(    data =="debug.level" 
         || data == "debug.prefix"
@@ -116,7 +118,7 @@ var tabimswitch = {
   _currentTab : null,
 
   _managedWindows : [],
-  _inputMethodMap : null,
+  _openedTabs : null,
 
   _defaultInputMethod : null,
 
@@ -154,9 +156,13 @@ var tabimswitch = {
 
   onWindowUnload: function(e)
   {
-    debugging.trace("onWindowUnload");
     if ( e.target == window )
-      this.notifyTabChange(getBrowser());
+    {
+      debugging.trace("onWindowUnload");
+      debugging.debugLog("Will destroy a browser window.");
+      this.destroy();
+      // this.notifyTabChange(getBrowser());
+    }
   },
 
   onTabDocLoad: function(e)
@@ -196,7 +202,18 @@ var tabimswitch = {
   onTabRemoved: function(e)
   {
     debugging.trace("onTabRemoved");
-    var browser = e.target.linkedBrowser;
+    var rmTab = e.target;
+    var browser = rmTab.linkedBrowser;
+    if ( rmTab )
+    {
+      debugging.infoLog("Tab removed: "+tabimswitch._getTabLinkedPageId(rmTab));
+      this._removeTabInputMethod(rmTab);
+    }
+    else
+    {
+      debugging.debugLog("No cur tab when creating new tab.");
+    }
+
     this.notifyTabChange(browser);
   },
 
@@ -328,7 +345,7 @@ var tabimswitch = {
         this._currentTab = tab;
 
         debugging.debugLog("Window lost focus, save IM for last active tab: <"
-             + tabimswitch._getTabLinkedPageId(tab) + "," + tabIm +">");
+             + tabimswitch._getTabLinkedPageId(tab) + "," + (tabIm?tabIm.readableString:"null") +">");
       }
      }
 
@@ -346,11 +363,22 @@ var tabimswitch = {
     this.strings = document.getElementById("tabimswitch-strings");
 
     this._app = null;
-    this._inputMethodMap = new Array();
+    this._openedTabs = new Array();
 
     this._registerDelayedInitEvent();
 
     this.initialized = true;
+  },
+  
+  destroy: function()
+  {
+    if ( ! this.initialized )
+      return;
+      
+    for ( var i=0; i<this._openedTabs.length(); ++i )
+    {
+      this._removeTabInputMethod(this._openedTabs[i]);
+    }
   },
 
   //
@@ -364,8 +392,7 @@ var tabimswitch = {
     if ( this._delayedInitSucceeded )
       return;
 
-    prefObserver.init();
-
+    this._app = this._getTabImSwitchApp();
     if ( this._app == null )
     {
       debugging.fatalError("init failed: cannot get TabImSwitch Application object.");
@@ -373,10 +400,12 @@ var tabimswitch = {
       return;
     }
 
+    prefObserver.init();
+
     this._manager = this._createInputMethodManager();
     if ( this._manager == null )
     {
-      debugging.fatalError("init failed: cannot get TabImSwitch Application object.");
+      debugging.fatalError("init failed: cannot get Input Method Manager object.");
       this.initialized = false;
       return;
     }
@@ -420,11 +449,14 @@ var tabimswitch = {
   updateEnvSettings: function()
   {
     var useMultilingual = false;
-    
+
+    if ( ! this._app )
+      return;
+
     if ( prefObserver.multilingual == null )
     {
-      useMultilingual = this._isMultilingualEnv();
-      debugging.debugLog("Auto-test multilingual environment: "+(useMultilingual?"yes":"no"));
+      this._app.multilingualPolicy = this._app.USE_AUTODETECT;
+      return;
     }
     else
     {
@@ -433,61 +465,56 @@ var tabimswitch = {
     
     if ( useMultilingual )
     {
-      this._app = this._getTabImSwitchAppMultilingual();
+      this._app.multilingualPolicy = this._app.USE_MULTILINGUAL;
     }
     else
     {
-      this._app = this._getTabImSwitchApp();
+      this._app.multilingualPolicy = this._app.USE_DEFAULT;
     }
+    
+    this._app.init();
   },
 
   //
   // Browser Input Method operations
   //
-  _setBrowserInputMethod: function(imName)
+  _setBrowserInputMethod: function(im)
   {
-    if ( this._app )
+    try
     {
-      try
+      if ( im )
       {
-        if ( imName != null )
-        {
-          this._app.currentKeyboardLayoutName = imName;
-          debugging.infoLog("Browser Input Method set to " + imName);
-        }
-        return true;
-      }
-      catch(ex)
-      {
-        debugging.error("_setBrowserInputMethod failed.");
+        im.setAsCurrent();
       }
     }
-    else
+    catch (ex)
     {
-      debugging.fatalError("_setBrowserInputMethod failed:: this._app==null. The TabImSwitchApp is not created.");
+      debugging.fatalError("cannot set browser input method: "+ex.message);
     }
-
-    return false;
   },
 
   _getBrowserInputMethod: function()
   {
-    if ( this._app )
+    try
     {
-      curImName = this._app.currentKeyboardLayoutName;
-      if ( curImName )
+      var cid = "@tabimswitch.googlecode.com/inputmethod;1";
+      var im = Components.classes[cid].createInstance();
+      im = im.QueryInterface(Components.interfaces.IInputMethod);
+      im.useCurrent();
+      
+      if ( ! this._app.multilingual && !(im.convMode & im.CMODE_NATIVE) )
       {
-        debugging.trace("Browser Input Method is " + curImName);
-        return curImName;
+        im.enable = false;
       }
-      else
-      {
-        debugging.fatalError("_getBrowserInputMethod failed: Can't create a new Input Method Context.");
-      }
+      
+      debugging.infoLog("Get browser input method as " +im.readableString);
+      
+      return im;
     }
-    else
+    catch(ex)
     {
-      debugging.fatalError("_getBrowserInputMethod failed: this._app==null. The Input Method Engine is not created.");
+      debugging.fatalError("cannot get browser input method: "+ex.message);
+      return null;
     }
 
     return null;
@@ -501,7 +528,7 @@ var tabimswitch = {
     if ( ! tab ) return null;
     if ( ! this._manager ) return null;
 
-    if ( this._inputMethodMap )
+    if ( this._openedTabs )
     {
       tabName = this._getTabLinkedPageId(tab);
       if ( tabName )
@@ -509,12 +536,12 @@ var tabimswitch = {
         try
         {
           var im = this._manager.getTabInputMethod(tabName);
-          debugging.infoLog("Get tab input method: <"+tabName+","+im+">");
+          debugging.infoLog("Get tab input method: <"+tabName+","+(im?im.readableString:"null")+">");
           return im;
         }
         catch (ex)
         {
-          debugging.warning("Not able to get input method for <"+tabName+">");
+          debugging.warning("Not able to get input method for <"+tabName+">: "+ex);
           return null;
         }
       }
@@ -525,7 +552,7 @@ var tabimswitch = {
     }
     else
     {
-      debugging.error("_getTabInputMethod failed: _inputMethodMap not defined.");
+      debugging.error("_getTabInputMethod failed: _openedTabs not defined.");
     }
 
     return null;
@@ -539,7 +566,7 @@ var tabimswitch = {
     {
       if ( im != null )
       {
-        if ( this._inputMethodMap )
+        if ( this._openedTabs )
         {
           tabName = this._getTabLinkedPageId(tab);
           if ( tabName )
@@ -547,11 +574,12 @@ var tabimswitch = {
             try
             {
               this._manager.setTabInputMethod(tabName, im);
-              debugging.infoLog("Save tab Input Method: <"+tabName+","+im+">");
+              this._openedTabs.push(tabName);
+              debugging.infoLog("Save tab Input Method: <"+tabName+","+(im?im.readableString:"null")+">");
             }
             catch (ex )
             {
-              debugging.warning("Not able to save tab input method <"+tabName+","+im+">");
+              debugging.warning("Not able to save tab input method <"+tabName+","+(im?im.readableString:"null")+">");
             }
           }
           else
@@ -561,7 +589,7 @@ var tabimswitch = {
         }
         else
         {
-          debugging.fatalError("_saveTabInputMethod failed: _inputMethodMap is not created.");
+          debugging.fatalError("_saveTabInputMethod failed: _openedTabs is not created.");
         }
       }
       else
@@ -575,23 +603,53 @@ var tabimswitch = {
     }
   },
 
+  _removeTabInputMethod: function(tab)
+  {
+    if ( ! this._manager ) return;
+
+    if ( tab )
+    {
+      if ( this._openedTabs )
+      {
+        tabName = this._getTabLinkedPageId(tab);
+        if ( tabName )
+        {
+          try
+          {
+            this._manager.setTabInputMethod(tabName, null);
+            this._openedTabs = this._removeFrom(this._openedTabs, tabName);
+            debugging.infoLog("Removeed tab Input Method: <"+tabName+">");
+          }
+          catch (ex )
+          {
+            debugging.warning("Not able to remove tab input method <"+tabName+">");
+          }
+        }
+        else
+        {
+          debugging.fatalError("_removeTabInputMethod failed: tab does not have a linked page.");
+        }
+      }
+      else
+      {
+        debugging.fatalError("_removeTabInputMethod failed: _openedTabs is not created.");
+      }
+    }
+    else
+    {
+      debugging.warning("_removeTabInputMethod: not tab to save.");
+    }
+  },
+
+
   //
   // Helper functions
   //
   _getTabImSwitchApp: function()
   {
-    return this._getTabImSwitchAppByCID("@tabimswitch.googlecode.com/application;1");
-  },
-
-  _getTabImSwitchAppMultilingual: function()
-  {
-    return this._getTabImSwitchAppByCID("@tabimswitch.googlecode.com/application;2");
-  },
-
-  _getTabImSwitchAppByCID: function(cid)
-  {
     try
     {
+      var cid = "@tabimswitch.googlecode.com/application;1";
       var obj = Components.classes[cid].createInstance();
       obj = obj.QueryInterface(Components.interfaces.ITabImSwitchApp);
       obj.init();
@@ -599,7 +657,7 @@ var tabimswitch = {
     }
     catch(ex)
     {
-      debugging.fatalError("TabImSwitch: cannot create TabImSwitchApp: "+ex.message);
+      debugging.fatalError("Cannot create TabImSwitchApp: "+ex.message);
       return null;
     }
 
@@ -620,77 +678,6 @@ var tabimswitch = {
       debugging.fatalError("Cannot create TabInputMethodManager: "+ex.message);
       return null;
     }
-  },
-  
-  _isMultilingualEnv: function()
-  {
-    var sysMan = null;
-    
-    try
-    {
-      var cid = "@tabimswitch.googlecode.com/system-manager;1";
-      sysMan = Components.classes[cid].createInstance();
-      sysMan = sysMan.QueryInterface(Components.interfaces.ISystemInputMethodManager);
-    }
-    catch (ex)
-    {
-      sysMan = null;
-    }
-    
-    if ( ! sysMan )
-    {
-      debugging.warning("Unable to create SystemInputMethodManager, will use non-multilingual version.");
-      return false;
-    }
-
-    var listOfIM = sysMan.inputMethodList;
-    debugging.debugLog("List of input methods: "+listOfIM);
-    var separator = sysMan.listSeparator;
-    
-    if ( ! listOfIM || ! separator )
-    {
-      debugging.warning("Unable to get IM list, will use non-multilingual version.");
-      return false;
-    }
-
-    var arrayOfIM = listOfIM.split(separator);  // array of input method IDs.
-    var countOfLang = this._countImLanguages(arrayOfIM);  // language count;
-
-    return (countOfLang >= 2);
-  },
-  
-  _countImLanguages: function(arrayOfIM)
-  {
-    var countOfLang = 0;
-    var langStatus = new Array(); // A map contains if a language have been founded.
-    for ( var i=0; i<arrayOfIM.length; ++i )
-    {
-      var imID = arrayOfIM[i];
-      // language name is at the last 4 chars
-      if ( ! imID ) continue;
-      
-      //
-      // Add string "lang" before all keys to avoid them converted to int
-      // which may make large array.
-      //
-      var langID = "lang"+imID.slice(4); 
-      if ( ! langStatus[langID] )
-      {
-        langStatus[langID] = true;
-        countOfLang++;
-      }
-    }
-    
-    //
-    // To fix the status of old TabIMSwitch users.
-    // Because old version of TabIMSwitch users (<=1.0.0.9) will add an English input method
-    // automatically. So if we found that the system has English language (0409) and the
-    // language count is 2, we think that's not multilingual environment.
-    //
-    if ( langStatus["lang0409"] && countOfLang == 2 )
-      countOfLang = 1;
-
-    return countOfLang;
   },
 
   _registerDelayedInitEvent: function()
@@ -786,6 +773,18 @@ var tabimswitch = {
       return null;
     docName = tab.getAttribute("linkedpanel");
     return docName;
+  },
+  
+  _removeFrom: function(arr, elem)
+  {
+    var retArray = new Array();
+    for ( var i=0; i<arr.length; ++i )
+    {
+      if ( arr[i] != elem )
+      retArray.push(arr[i]);
+    }
+    
+    return retArray;
   },
 
   __dummy: function() {}

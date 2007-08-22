@@ -96,8 +96,12 @@ var debugging = {
     if ( level > this._debugLevel )
       return;
 
+    var msg = this._prefix+": ["+this._logLevelName[level]+"] "+message;
     if ( this._writer )
-      this._writer.writeLog(level, this._prefix+": ["+this._logLevelName[level]+"] "+message);
+      this._writer.writeLog(level, msg);
+      
+    if ( level <= this.LOG_ERROR )
+      Components.reportError(msg);
   },
 
   init : function(prefix, level, writer)

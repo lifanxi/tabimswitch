@@ -192,6 +192,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InputMethod.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\InputMethodContext.cpp"
 				>
 			</File>
@@ -208,7 +212,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SystemImManager.cpp"
+				RelativePath=".\SystemInputMethod.cpp"
 				>
 			</File>
 			<File
@@ -237,6 +241,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\TabImSwitchApp.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -245,6 +253,10 @@
 			>
 			<File
 				RelativePath=".\DebugLogger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InputMethod.h"
 				>
 			</File>
 			<File
@@ -264,7 +276,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SystemImManager.h"
+				RelativePath=".\SystemInputMethod.h"
 				>
 			</File>
 			<File
@@ -276,15 +288,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TabImSwitchAppImpl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TabImSwitchAppImpl.inl"
-				>
-			</File>
-			<File
 				RelativePath=".\Uncopyable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Win32Error.h"
 				>
 			</File>
 		</Filter>
