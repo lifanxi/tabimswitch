@@ -1,4 +1,4 @@
-#labels Featured,Phase-Deploy,TutorialJa
+#labels Ja,Phase-Deploy,Tutorial
 #TabIMSwitchを初めて使うユーザーへの案内
 
 = TabIMSwitchの紹介 =
