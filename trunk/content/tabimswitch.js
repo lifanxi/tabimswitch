@@ -243,6 +243,7 @@ var tabimswitch = {
       }
 
       this._setBrowserInputMethod(this._manager.defaultInputMethod);
+      debugging.debugLog("Set browser input method to "+this._manager.defaultInputMethod.readableString);
     }
   },
 
@@ -261,6 +262,7 @@ var tabimswitch = {
       {
         curIm = this._getTabInputMethod(curTab);
         this._setBrowserInputMethod(curIm);
+        debugging.debugLog("Set browser input method to "+curIm.readableString);
         this._currentTab = curTab;
       }
       else
@@ -413,6 +415,17 @@ var tabimswitch = {
     if ( this._manager.defaultInputMethod == null )
     {
       this._manager.defaultInputMethod = this._getBrowserInputMethod();
+
+      //
+      // Hack for the Windows XP SP2 English with MSPY 2003 bug,
+      // See http://code.google.com/p/tabimswitch/issues/detail?id=7
+      // 
+      if ( ! this._app.multilingual && this._app.hasMSPY() )
+      {
+        this._manager.defaultInputMethod.openStatus = false;
+      }
+
+      debugging.infoLog("init: set default browser input method as "+this._manager.defaultInputMethod.readableString);
     }
     else
     {
@@ -501,12 +514,7 @@ var tabimswitch = {
       var im = Components.classes[cid].createInstance();
       im = im.QueryInterface(Components.interfaces.IInputMethod);
       im.useCurrent();
-      
-      if ( ! this._app.multilingual && !(im.convMode & im.CMODE_NATIVE) )
-      {
-        im.enable = false;
-      }
-      
+            
       debugging.infoLog("Get browser input method as " +im.readableString);
       
       return im;

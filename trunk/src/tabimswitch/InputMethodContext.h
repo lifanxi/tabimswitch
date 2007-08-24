@@ -5,6 +5,8 @@
 #include "Uncopyable.h"
 #include <set>
 
+// #define _USE_IME_FLAGS_FIXUP
+
 class InputMethodContext
   : public Uncopyable
 {
@@ -19,10 +21,23 @@ public:
   void disable(void);
   bool isEnabled(void);
 
+#ifndef _USE_IME_FLAGS_FIXUP
+
+  void getIMEMode(DWORD& convMode, DWORD& sentMode);
+  void setIMEMode(DWORD convMode, DWORD sentMode);
+
+  BOOL getOpenStatus(void);
+  void setOpenStatus(bool status);
+
+#else // _USE_IME_FLAGS_FIXUP
+
   void getIMEMode(DWORD& convMode, DWORD& sentMode, BOOL& englishMode, BOOL& isSentModeNone);
   void setIMEMode(DWORD convMode, DWORD sentMode, BOOL englishMode, BOOL isSentModeNone);
 
+#endif // _USE_IME_FLAGS_FIXUP
+
 private:
+
   enum SystemLanguageID
   {
     LID_TRADITIONAL_CHINESE = 0x0404,
@@ -40,18 +55,22 @@ private:
     SIMPLIFIED_CHINESE
   };
 
-  bool enableWindowIME(HWND hwnd);
-  bool disableWindowIME(HWND hwnd);
-  bool fillAppIMC(HWND hwnd);
-  bool getIMEWindow(HWND hwnd);
-
   LanguageID getLanguage(void);
 
+#ifdef _USE_IME_FLAGS_FIXUP
   void fixupGotIMEMode(DWORD& convMode, DWORD& sentMode, BOOL& englishMode, BOOL& isSentModeNone);
   void fixupSetIMEMode(DWORD& convMode, DWORD& sentMode, BOOL englishMode, BOOL isSentModeNone);
+#endif
 
-  HIMC getIMC(void);
-  bool refreshIMC(void);
+  bool hasSavedIMC(void);
+
+  bool enableWindowIME(HWND hwnd);
+  bool disableWindowIME(HWND hwnd);
+
+  bool setWindowIMEMode(HWND hwnd);
+  bool setWindowIMEOpenStatus(HWND hwnd);
+  bool getWindowIMEMode(HWND hwnd);
+  bool getWindowIMEOpenStatus(HWND hwnd);
 
 private:
   typedef bool (InputMethodContext::*pfxForeachCallback)(HWND hWnd);
@@ -63,10 +82,29 @@ private:
   void forEachFirefoxWindow(pfxForeachCallback callback);
   static BOOL CALLBACK enumWndProc(HWND hwnd, LPARAM lParam);
 
+  void onMessage(PMSG pMsg);
+  void onSendMessage(PCWPSTRUCT pMsg);
+
 private:
   HIMC m_savedIMC; // The saved IMC when disable IME.
-  std::set<HIMC> m_appIMC;
-  HWND m_hwndIME; // the IME window
+  bool m_afterInit; // if init is finished.
+  struct {
+    DWORD convMode;
+    DWORD sentMode;
+    BOOL openStatus;
+  } m_tempStore;
+
+  // Message hook support
+private:
+  bool startMessageObserve(void);
+  void stopMessageObserve(void);
+  static std::set<InputMethodContext*> sm_msgListeners;
+
+  static LRESULT CALLBACK MessageProviderProc(int code, WPARAM wParam, LPARAM lParam);
+  static LRESULT CALLBACK SendMessageProc(int code, WPARAM wParam, LPARAM lParam);
+
+  static HHOOK sm_hMsgHook; // Message hook for PostMessage
+  static HHOOK sm_hSendHook;  // Message hook for SendMessage
 };
 
 #endif // _INPUT_METHOD_CONTEXT_H_

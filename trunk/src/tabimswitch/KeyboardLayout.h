@@ -18,9 +18,12 @@ public:
   static KeyboardLayout* createByEnvironment(void);
 
   static bool isMultilingualEnv(void);
+  static bool hasMSPY() { return sm_hasMSPY; }
 
 protected:
   KeyboardLayout(void) {}
+
+  static bool sm_hasMSPY;
 };
 
 #endif //__KEYBOARD_LAYOUT_H__

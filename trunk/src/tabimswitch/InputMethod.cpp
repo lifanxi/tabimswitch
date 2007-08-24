@@ -16,12 +16,16 @@
 NS_IMPL_ISUPPORTS1(CInputMethod, IInputMethod)
 
 CInputMethod::CInputMethod()
-: m_isConvModeAlphanum(FALSE)
-, m_isSentModeNone(FALSE)
+: m_initialized(false)
+, m_enable(false)
 , m_convMode(0)
 , m_sentMode(0)
-, m_enable(false)
-, m_initialized(false)
+#ifdef  _USE_IME_FLAGS_FIXUP
+, m_isConvModeAlphanum(FALSE)
+, m_isSentModeNone(FALSE)
+#else
+, m_openStatus(FALSE)
+#endif 
 {
   LOGGER(LOG_TRACE) << "Created new CInputMethod object " << this << endlog;
 }
@@ -38,10 +42,15 @@ NS_IMETHODIMP CInputMethod::GetReadableString(nsAString & aReadableString)
     return NS_OK;
 
   std::wostringstream oss;
-  oss << (m_enable?'e':'d') << ','
-      << m_keyboardLayout.c_str() << ','
-      << (m_isConvModeAlphanum?'A':'N') << ','
-      << (m_isSentModeNone?'N':'V') << ',';
+  oss << (m_enable?'e':'d') << ';'
+      << m_keyboardLayout.c_str() << ';'
+#ifdef  _USE_IME_FLAGS_FIXUP
+      << (m_isConvModeAlphanum?'A':'N') << ';'
+      << (m_isSentModeNone?'N':'V') << ';'
+#else
+      << (m_openStatus?'O':'C') << ';'
+#endif //  _USE_IME_FLAGS_FIXUP
+      ;
 
   struct MaskMapItem { DWORD mask; char openTag; };
   static const MaskMapItem convModeMask[] = {
@@ -68,15 +77,15 @@ NS_IMETHODIMP CInputMethod::GetReadableString(nsAString & aReadableString)
 
   for ( size_t i=0; i<_countof(convModeMask); ++i )
   {
-    if ( m_convMode & convModeMask[i].mask )
+    if ( (m_convMode & convModeMask[i].mask) == convModeMask[i].mask )
       oss << convModeMask[i].openTag;
   }
 
-  oss << ',';
+  oss << ';';
 
   for ( size_t i=0; i<_countof(sentModeMask); ++i )
   {
-    if ( m_sentMode & sentModeMask[i].mask )
+    if ( (m_sentMode & sentModeMask[i].mask) == sentModeMask[i].mask )
       oss << sentModeMask[i].openTag;
   }
 
@@ -99,10 +108,12 @@ NS_IMETHODIMP CInputMethod::UseCurrent()
     KeyboardLayout& kbl = sysIME.getKeyboardLayout();
     m_keyboardLayout = kbl.getCurrent();
 
-    if ( m_enable )
-    {
-      imc.getIMEMode(m_convMode, m_sentMode, m_isConvModeAlphanum, m_isSentModeNone);
-    }
+#ifndef _USE_IME_FLAGS_FIXUP
+    imc.getIMEMode(m_convMode, m_sentMode);
+    m_openStatus = imc.getOpenStatus();
+#else //  _USE_IME_FLAGS_FIXUP
+    imc.getIMEMode(m_convMode, m_sentMode, m_isConvModeAlphanum, m_isSentModeNone);
+#endif //  _USE_IME_FLAGS_FIXUP
 
     m_initialized = true;
 
@@ -128,19 +139,23 @@ NS_IMETHODIMP CInputMethod::SetAsCurrent()
   {
     SystemInputMethod& sysIME = SystemInputMethod::get();
 
+    InputMethodContext& imc = sysIME.getInputMethodContext();
+
+    if ( m_enable )
+      imc.enable();
+
     KeyboardLayout& kbl = sysIME.getKeyboardLayout();
     kbl.setCurrent(m_keyboardLayout);
 
-    InputMethodContext& imc = sysIME.getInputMethodContext();
-    if ( m_enable )
-    {
-      imc.enable();
-      imc.setIMEMode(m_convMode, m_sentMode, m_isConvModeAlphanum, m_isSentModeNone);
-    }
-    else
-    {
+#ifdef  _USE_IME_FLAGS_FIXUP
+    imc.setIMEMode(m_convMode, m_sentMode, m_isConvModeAlphanum, m_isSentModeNone);
+#else //  _USE_IME_FLAGS_FIXUP
+    imc.setIMEMode(m_convMode, m_sentMode);
+    imc.setOpenStatus(m_openStatus?true:false);
+#endif //  _USE_IME_FLAGS_FIXUP
+
+    if ( ! m_enable )
       imc.disable();
-    }
 
     return NS_OK;
   }
@@ -151,7 +166,7 @@ NS_IMETHODIMP CInputMethod::SetAsCurrent()
   return NS_ERROR_UNEXPECTED;
 }
 
-/* [noscript] attribute boolean enabled; */
+/* attribute boolean enabled; */
 NS_IMETHODIMP CInputMethod::GetEnabled(PRBool *aEnabled)
 {
   if ( aEnabled == NULL )
@@ -167,7 +182,7 @@ NS_IMETHODIMP CInputMethod::SetEnabled(PRBool aEnabled)
   return NS_OK;
 }
 
-/* [noscript] attribute AString keyboardLayout; */
+/* attribute AString keyboardLayout; */
 NS_IMETHODIMP CInputMethod::GetKeyboardLayout(nsAString & aKeyboardLayout)
 {
   aKeyboardLayout = m_keyboardLayout.c_str();
@@ -179,7 +194,24 @@ NS_IMETHODIMP CInputMethod::SetKeyboardLayout(const nsAString & aKeyboardLayout)
   return NS_OK;
 }
 
-/* [noscript] attribute long convMode; */
+/* attribute boolean openStatus; */
+NS_IMETHODIMP CInputMethod::GetOpenStatus(PRBool *aOpenStatus)
+{
+  if ( aOpenStatus == NULL )
+    return NS_ERROR_NULL_POINTER;
+
+  *aOpenStatus = (m_openStatus?PR_TRUE:PR_FALSE);
+  return NS_OK;
+}
+NS_IMETHODIMP CInputMethod::SetOpenStatus(PRBool aOpenStatus)
+{
+  m_openStatus = (aOpenStatus!=PR_FALSE);
+
+  return NS_OK;
+}
+
+
+/* attribute long convMode; */
 NS_IMETHODIMP CInputMethod::GetConvMode(PRInt32 *aConvMode)
 {
   if ( NULL == aConvMode )
@@ -195,7 +227,7 @@ NS_IMETHODIMP CInputMethod::SetConvMode(PRInt32 aConvMode)
   return NS_OK;
 }
 
-/* [noscript] attribute long sentMode; */
+/* attribute long sentMode; */
 NS_IMETHODIMP CInputMethod::GetSentMode(PRInt32 *aSentMode)
 {
   if ( NULL == aSentMode )

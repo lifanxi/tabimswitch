@@ -22,14 +22,20 @@ private:
   ~CInputMethod();
 
 protected:
+  bool m_initialized;
+
   std::wstring m_keyboardLayout;
-  BOOL m_isConvModeAlphanum;
-  BOOL m_isSentModeNone;
+  bool m_enable;
   DWORD m_convMode;
   DWORD m_sentMode;
 
-  bool m_enable;
-  bool m_initialized;
+#ifdef  _USE_IME_FLAGS_FIXUP
+  BOOL m_isConvModeAlphanum;
+  BOOL m_isSentModeNone;
+#else
+  BOOL m_openStatus;
+#endif // def  _USE_IME_FLAGS_FIXUP
+
 };
 
 #endif // _INPUT_METHOD_H_
