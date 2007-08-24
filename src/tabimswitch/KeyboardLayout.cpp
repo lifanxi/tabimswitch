@@ -13,6 +13,8 @@
 
 HMODULE GetMyModuleHandle(void);
 
+bool KeyboardLayout::sm_hasMSPY = false;
+
 //////////////////////////////////////////////////////////////////////////
 // Class Define
 //
@@ -28,9 +30,6 @@ protected:
   std::wstring getCurrent(void);
   void setCurrent(std::wstring const& kbl);
   bool isMultilingual(void) const;
-
-  HHOOK m_hMsgHook;
-  HKL m_curKL;
 };
 
 class MultilingualKeyboardLayout
@@ -72,6 +71,10 @@ bool KeyboardLayout::isMultilingualEnv(void)
   for ( int i=0; i<count; ++i )
   {
     LOGGER(LOG_DEBUG) << "System keyboard layout: " << sysHKLs[i] << endlog;
+
+    if ( sysHKLs[i] == reinterpret_cast<HKL>(0xe000e0804) )   // MSPY
+      sm_hasMSPY = true;
+
     WORD langID = LOWORD(sysHKLs[i]);
     if ( sysLangs.find(langID) != sysLangs.end() )
       continue;
@@ -103,29 +106,16 @@ bool KeyboardLayout::isMultilingualEnv(void)
 // DefaultKeyboardLayout
 //
 DefaultKeyboardLayout::DefaultKeyboardLayout(void)
-: m_curKL(::GetKeyboardLayout(::GetCurrentThreadId()))
-, m_hMsgHook(NULL)
 {
 }
 
 DefaultKeyboardLayout::~DefaultKeyboardLayout(void)
 {
-  if ( m_hMsgHook )
-  {
-    ::UnhookWindowsHookEx(m_hMsgHook);
-    m_hMsgHook = NULL;
-  }
 }
 
 
 bool DefaultKeyboardLayout::init(void)
 {
-  if ( m_hMsgHook != NULL )
-    return true;
-#if 0
-  LOGGER(DEBUG) << "Set up message hook for  thread " << ::GetCurrentThreadId() << endl;
-  m_hMsgHook = ::SetWindowsHookEx(WH_GETMESSAGE, &GetMsgProc, GetMyModuleHandle(), ::GetCurrentThreadId());
-#endif 
   return true;
 }
 
@@ -134,7 +124,6 @@ std::wstring DefaultKeyboardLayout::getCurrent(void)
   HKL curKL = ::GetKeyboardLayout(0);
   wchar_t strCurKL[16];
   swprintf_s(strCurKL, L"%08X", curKL);
-  LOGGER(LOG_TRACE) << "Current keyboard layout name: " << strCurKL << endlog;
   return std::wstring(strCurKL);
 }
 
@@ -168,7 +157,6 @@ std::wstring MultilingualKeyboardLayout::getCurrent(void)
   wchar_t kbdLayoutName[KL_NAMELENGTH];
   if ( ::GetKeyboardLayoutNameW(kbdLayoutName) )
   {
-    LOGGER(LOG_TRACE) << "Current keyboard layout name: " << kbdLayoutName << endlog;
     return std::wstring(kbdLayoutName);
   }
 

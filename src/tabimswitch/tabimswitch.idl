@@ -11,6 +11,8 @@ interface IInputMethod : nsISupports
   attribute boolean enabled;
   attribute AString keyboardLayout;
 
+  attribute boolean openStatus;
+
   const long CMODE_ALPHANUMERIC = 0x0000;
   const long CMODE_NATIVE = 0x0001;
   const long CMODE_CHINESE = CMODE_NATIVE;
@@ -65,7 +67,10 @@ interface ITabImSwitchApp : nsISupports
 
   void init();
 
-  //void setCurrentInputMethod(in IInputMethod im);
+  //
+  // To solve the problem of MSPY2003 with XP En.
+  //
+  boolean hasMSPY();
 
   readonly attribute AString inputMethodList;
   readonly attribute wchar listSeparator;

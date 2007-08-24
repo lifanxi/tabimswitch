@@ -6,11 +6,18 @@
 
 #pragma comment(lib, "Imm32")
 
+HMODULE  GetMyModuleHandle(void);
+std::set<InputMethodContext*> InputMethodContext::sm_msgListeners;
+HHOOK InputMethodContext::sm_hMsgHook = NULL;
+HHOOK InputMethodContext::sm_hSendHook = NULL;
+
 InputMethodContext::InputMethodContext(void)
 : m_savedIMC(NULL)
-, m_hwndIME(NULL)
+, m_afterInit(false)
 {
-
+  m_tempStore.convMode = 0;
+  m_tempStore.sentMode = 0;
+  m_tempStore.openStatus = FALSE;
 }
 
 InputMethodContext::~InputMethodContext(void)
@@ -21,60 +28,164 @@ InputMethodContext::~InputMethodContext(void)
   // Or there will be memory leaks.
   // But because this is a singleton class, we do not care it now.
   //
+
+  stopMessageObserve();
 }
 
 bool InputMethodContext::init(void)
 {
-  if ( ! refreshIMC() )
-    return false;
+  startMessageObserve();
 
-  forEachFirefoxWindow(&InputMethodContext::getIMEWindow);
-  if ( NULL == m_hwndIME )
+  m_afterInit = true;
+  return true;
+}
+
+bool InputMethodContext::startMessageObserve(void)
+{
+  if ( sm_msgListeners.empty() )
   {
-    LOGGER(LOG_ERROR) << "Failed to create Application IME window." << endlog;
-    return false;
+    assert ( sm_hMsgHook == NULL );
+    sm_hMsgHook = ::SetWindowsHookEx(WH_GETMESSAGE, MessageProviderProc, GetMyModuleHandle(), ::GetCurrentThreadId());
+    if ( sm_hMsgHook == NULL )
+    {
+      Win32Error err;
+      LOGGER(LOG_ERROR) << "Failed to create post message observable provider (" << err.getErrorCode() << "):" << err.getString() <<endlog;
+      return false;
+    }
+    LOGGER(LOG_INFO) << "PostMessage observable provider " << sm_hMsgHook << " created." << endlog;
+
+    sm_hSendHook = ::SetWindowsHookEx(WH_CALLWNDPROC, SendMessageProc, GetMyModuleHandle(), ::GetCurrentThreadId());
+    if ( sm_hSendHook == NULL )
+    {
+      Win32Error err;
+      LOGGER(LOG_ERROR) << "Failed to create get message observable provider (" << err.getErrorCode() << "):" << err.getString() <<endlog;
+      UnhookWindowsHookEx(sm_hMsgHook);
+      sm_hMsgHook = NULL;
+      return false;
+    }
+    LOGGER(LOG_INFO) << "GetMessage observable provider " << sm_hSendHook << " created." << endlog;
   }
-  LOGGER(LOG_DEBUG) << "Application IME window: " << m_hwndIME << endlog;
+
+  if ( sm_msgListeners.insert(this).second )
+  {
+    LOGGER(LOG_INFO) << "Message observer " << this << " added successfully." << endlog;
+  }
+  else
+  {
+    LOGGER(LOG_INFO) << "Message observer " << this << " already added, ignore." << endlog;
+  }
 
   return true;
 }
 
-bool InputMethodContext::refreshIMC(void)
+void InputMethodContext::stopMessageObserve(void)
 {
-  m_appIMC.clear();
+  if ( sm_hMsgHook == NULL )
+    return;
 
-  forEachFirefoxWindow(&InputMethodContext::fillAppIMC);
-
-  if ( m_appIMC.empty() )
+  std::set<InputMethodContext*>::iterator findIt = sm_msgListeners.find(this);
+  if ( findIt != sm_msgListeners.end() )
   {
-    Win32Error err;
-    LOGGER(LOG_ERROR) << "Unable to get window IMC: " << err.getErrorCode() << ": " << err.getString() << endlog;
-    return false;
+    sm_msgListeners.erase(findIt);
+
+    LOGGER(LOG_INFO) << "Message observer " << this << " removed." << endlog;
+
+    if ( sm_msgListeners.empty() )
+    {
+      ::UnhookWindowsHookEx(sm_hMsgHook);
+      LOGGER(LOG_INFO) << "Observable post message provider " << sm_hMsgHook << " destroyed." << endlog;
+      sm_hMsgHook = NULL;
+      ::UnhookWindowsHookEx(sm_hSendHook);
+      LOGGER(LOG_INFO) << "Observable send message provider " << sm_hSendHook << " destroyed." << endlog;
+      sm_hSendHook = NULL;
+    }
   }
-
-  LOGGER(LOG_DEBUG) << "Window IMC count: " << m_appIMC.size() << endlog;
-
-  return true;
 }
 
-HIMC InputMethodContext::getIMC(void)
+void InputMethodContext::onMessage(PMSG pMsg)
 {
-  if ( m_savedIMC != NULL )
-    return m_savedIMC;
-
-  if ( m_appIMC.empty() )
+  (pMsg);
+#if 0
+  if ( pMsg->message == WM_INPUTLANGCHANGE 
+     || pMsg->message == WM_INPUTLANGCHANGEREQUEST )
   {
-    if ( ! refreshIMC() )
-      return NULL;
+    LOGGER(LOG_DEBUG) << "Input language changed by command "
+      << (pMsg->message==WM_INPUTLANGCHANGE?"WM_INPUTLANGCHANGE":"WM_INPUTLANGCHANGREQUEST") << endlog;
+    if ( m_hwndIME && ::IsWindow(m_hwndIME) )
+    {
+      if ( m_savedIMC )
+      {
+        LOGGER(LOG_DEBUG) << "The saved disabled IMC " << m_savedIMC << " is destroyed." << endlog;
+        HIMC hTmpImc = m_savedIMC;
+        m_savedIMC = NULL;
+        ::ImmReleaseContext(m_hwndIME, hTmpImc);
+
+        //
+        // Because when we have chance to process this message, the thread have
+        // returned from the "set input method to new tab" flow. (Firefox UI is
+        // single threaded and WM_INPUTLANGCHANGE/WM_INPUTLANGCHANGEREQUEST is POSTED to message queue.)
+        // So if new input method is also disable, it will set m_enable to false and keep the
+        // save IMC there, to be changed by this notification.
+        //
+        if ( ! m_enabled )
+          disable();
+      }
+    }
+  }
+#endif
+}
+
+void InputMethodContext::onSendMessage(PCWPSTRUCT pMsg)
+{
+  if ( pMsg->message == WM_INPUTLANGCHANGE )
+  {
+    LOGGER(LOG_DEBUG) << "Input language changed to " << reinterpret_cast<void*>(pMsg->lParam) << endlog;
+  }
+}
+
+LRESULT CALLBACK InputMethodContext::MessageProviderProc(int code, WPARAM wParam, LPARAM lParam)
+{
+  if ( HC_ACTION == code )
+  {
+    UNREFERENCED_PARAMETER(wParam);
+    PMSG pMsg = reinterpret_cast<PMSG>(lParam);
+    if ( pMsg != NULL )
+    {
+      for ( std::set<InputMethodContext*>::iterator traIt = sm_msgListeners.begin();
+        traIt != sm_msgListeners.end(); ++traIt )
+      {
+        InputMethodContext* imc = *traIt;
+        assert ( imc != NULL );
+        imc->onMessage(pMsg);
+      }
+    }
   }
 
-  //
-  // TRICK:
-  // No matter how much IMCs, we just use the first
-  // Is it an acceptable method?
-  //
-  return *m_appIMC.begin();
+  return ::CallNextHookEx(0, code, wParam, lParam);
 }
+
+LRESULT CALLBACK InputMethodContext::SendMessageProc(int code, WPARAM wParam, LPARAM lParam)
+{
+  if ( HC_ACTION == code )
+  {
+    UNREFERENCED_PARAMETER(wParam);
+    PCWPSTRUCT pMsg = reinterpret_cast<PCWPSTRUCT>(lParam);
+    if ( pMsg != NULL )
+    {
+      for ( std::set<InputMethodContext*>::iterator traIt = sm_msgListeners.begin();
+        traIt != sm_msgListeners.end(); ++traIt )
+      {
+        InputMethodContext* imc = *traIt;
+        assert ( imc != NULL );
+        imc->onSendMessage(pMsg);
+      }
+    }
+  }
+
+  return ::CallNextHookEx(0, code, wParam, lParam);
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 void InputMethodContext::enable(void)
 {
@@ -93,19 +204,243 @@ void InputMethodContext::disable(void)
 {
   if ( ! isEnabled() )
   {
-    LOGGER(LOG_INFO) << "Input methdo already disable." << endlog;
+    LOGGER(LOG_INFO) << "Input method already disable." << endlog;
     return;
   }
 
   LOGGER(LOG_INFO) << "Disable input method." << endlog;
-  m_savedIMC = getIMC();
+  m_savedIMC = NULL;
   forEachFirefoxWindow(&InputMethodContext::disableWindowIME);
+}
+
+bool InputMethodContext::hasSavedIMC(void)
+{
+  return (m_savedIMC!=NULL);
 }
 
 bool InputMethodContext::isEnabled(void)
 {
-  return (m_savedIMC == NULL);
+  return (m_afterInit && !hasSavedIMC());
 }
+
+bool InputMethodContext::enableWindowIME(HWND hwnd)
+{
+  if ( m_savedIMC != NULL && ::IsWindow(hwnd) )
+  {
+    ::ImmAssociateContext(hwnd, m_savedIMC);
+    //if ( ::IsWindowVisible(hwnd) )
+      ::SetFocus(hwnd);
+  }
+
+  return true;
+}
+
+bool InputMethodContext::disableWindowIME(HWND hwnd)
+{
+  HIMC hImc = ::ImmGetContext(hwnd);
+
+  // associate context to NULL to disable the IME.
+  if ( hImc != NULL )
+    ::ImmAssociateContext(hwnd, NULL);
+
+  ::ImmReleaseContext(hwnd, hImc);
+  //if ( ::GetParent(hwnd) == NULL )
+    ::SetFocus(hwnd);
+
+  m_savedIMC = hImc;
+
+  return false;
+}
+
+bool InputMethodContext::setWindowIMEMode(HWND hwnd)
+{
+  HIMC hImc = ::ImmGetContext(hwnd);
+  if ( hImc )
+  {
+    ::ImmSetConversionStatus(hImc, m_tempStore.convMode, m_tempStore.sentMode);
+    LanguageID language = getLanguage();
+    if ( language == JAPANESE )
+    {
+      BOOL openStatus = (m_tempStore.convMode & IME_CMODE_NATIVE)?TRUE:FALSE;
+      ::ImmSetOpenStatus(hImc, openStatus);
+    }
+    ::ImmReleaseContext(hwnd, hImc);
+  }
+
+  return true;  // Continue enumerate next window.
+}
+
+bool InputMethodContext::setWindowIMEOpenStatus(HWND hwnd)
+{
+  HIMC hImc = ::ImmGetContext(hwnd);
+  if ( hImc )
+  {
+    ::ImmSetOpenStatus(hImc, m_tempStore.openStatus);
+    ::ImmReleaseContext(hwnd, hImc);
+  }
+
+  return true;  // Continue to enumerate next window.
+}
+
+bool InputMethodContext::getWindowIMEMode(HWND hwnd)
+{
+  HIMC hImc = ::ImmGetContext(hwnd);
+  if ( hImc )
+  {
+    if ( ! ::ImmGetConversionStatus(hImc, &m_tempStore.convMode, &m_tempStore.sentMode) )
+    {
+      ::ImmReleaseContext(hwnd, hImc);
+      return true;    // try next window to get.
+    }
+
+    LanguageID language = getLanguage();
+    if ( language == JAPANESE )
+    {
+      if ( ::ImmGetOpenStatus(hImc) )
+        m_tempStore.convMode |= IME_CMODE_NATIVE;
+      else
+        m_tempStore.convMode &= ~IME_CMODE_NATIVE;
+    }
+
+    ::ImmReleaseContext(hwnd, hImc);
+    
+    return false;   //  already got the value, will not continue search.
+  }
+
+  return true;  // try next window to get.
+}
+
+
+bool InputMethodContext::getWindowIMEOpenStatus(HWND hwnd)
+{
+  HIMC hImc = ::ImmGetContext(hwnd);
+  if ( hImc )
+  {
+    m_tempStore.openStatus = ::ImmGetOpenStatus(hImc);
+    ::ImmReleaseContext(hwnd, hImc);
+    return false;     // already found, will not continue.
+  }
+
+  return true;
+}
+
+void InputMethodContext::forEachFirefoxWindow(pfxForeachCallback callback)
+{
+  EnumCallbackParam params;
+  params.pThis = this;
+  params.pCallback = callback;
+  ::EnumThreadWindows(::GetCurrentThreadId(), &enumWndProc, reinterpret_cast<LPARAM>(&params));
+}
+
+BOOL CALLBACK InputMethodContext::enumWndProc(HWND hwnd, LPARAM lParam)
+{
+  EnumCallbackParam* pParam = reinterpret_cast<EnumCallbackParam*>(lParam);
+  assert ( pParam != NULL );
+  assert ( pParam->pThis != NULL );
+  assert ( pParam->pCallback != NULL );
+
+  InputMethodContext* pThis = pParam->pThis;
+  pfxForeachCallback pfxCallback = pParam->pCallback;
+  return ((pThis->*pfxCallback)(hwnd)) ? TRUE : FALSE;
+}
+
+InputMethodContext::LanguageID InputMethodContext::getLanguage(void)
+{
+  HKL hKeyboardLayout = ::GetKeyboardLayout(0);
+  switch (LOWORD(hKeyboardLayout))
+  {
+  case LID_TRADITIONAL_CHINESE:
+    return TRADITIONAL_CHINESE;
+  case LID_JAPANESE:
+    return JAPANESE;
+  case LID_KOREAN:
+    return KOREAN;
+  case LID_SIMPLIFIED_CHINESE:
+    return SIMPLIFIED_CHINESE;
+  default:
+    return DEFAULT;
+  }
+}
+
+#ifndef _USE_IME_FLAGS_FIXUP
+
+void InputMethodContext::getIMEMode(DWORD& convMode, DWORD& sentMode)
+{
+  forEachFirefoxWindow(&InputMethodContext::getWindowIMEMode);
+  convMode = m_tempStore.convMode;
+  sentMode = m_tempStore.sentMode;
+
+#if 0
+  HWND hWnd = ::GetActiveWindow();
+  if ( hWnd )
+  {
+    HIMC hImc = ::ImmGetContext(hWnd);
+    if ( hImc )
+    {
+      if ( ! ::ImmGetConversionStatus(hImc, &convMode, &sentMode) )
+      {
+        LanguageID language = getLanguage();
+        if ( language == JAPANESE )
+        {
+          if ( ::ImmGetOpenStatus(hImc) )
+            convMode |= IME_CMODE_NATIVE;
+          else
+            convMode &= ~IME_CMODE_NATIVE;
+        }
+
+        ::ImmReleaseContext(hWnd, hImc);
+        throw std::runtime_error("Unable to get IMC mode");
+      }
+
+      ::ImmReleaseContext(hWnd, hImc);
+    }
+  }
+#endif
+}
+
+void InputMethodContext::setIMEMode(DWORD convMode, DWORD sentMode)
+{
+  m_tempStore.convMode = convMode;
+  m_tempStore.sentMode = sentMode;
+
+  forEachFirefoxWindow(&InputMethodContext::setWindowIMEMode);
+
+  LanguageID language = getLanguage();
+  if ( language == JAPANESE )
+  {
+    setOpenStatus(convMode & IME_CMODE_NATIVE);
+  }
+}
+
+BOOL InputMethodContext::getOpenStatus(void)
+{
+#if 0
+  BOOL openStatus = FALSE;
+  HWND hWnd = ::GetActiveWindow();
+  if ( hWnd )
+  {
+    HIMC hImc = ::ImmGetContext(hWnd);
+    if ( hImc )
+    {
+      openStatus = ::ImmGetOpenStatus(hImc);
+      ::ImmReleaseContext(hWnd, hImc);
+    }
+  }
+
+  return openStatus;
+#endif
+  forEachFirefoxWindow(&InputMethodContext::getWindowIMEOpenStatus);
+  return m_tempStore.openStatus;
+}
+
+void InputMethodContext::setOpenStatus(bool status)
+{
+  m_tempStore.openStatus = (status?TRUE:FALSE);
+
+  forEachFirefoxWindow(&InputMethodContext::setWindowIMEOpenStatus);
+}
+
+#else // _USE_IME_FLAGS_FIXUP
 
 void InputMethodContext::getIMEMode(DWORD& convMode, DWORD& sentMode, BOOL& englishMode, BOOL& isSentModeNone)
 {
@@ -142,73 +477,6 @@ void InputMethodContext::setIMEMode(DWORD convMode, DWORD sentMode, BOOL english
   LanguageID language = getLanguage();
   if ( JAPANESE == language )
     ::ImmSetOpenStatus(hImc, !englishMode);
-}
-
-bool InputMethodContext::enableWindowIME(HWND hwnd)
-{
-  assert ( m_savedIMC != NULL );
-  ::ImmAssociateContext(hwnd, m_savedIMC);
-  return true;
-}
-
-bool InputMethodContext::disableWindowIME(HWND hwnd)
-{
-  assert ( m_savedIMC == NULL );
-
-  HIMC hImc = ::ImmGetContext(hwnd);
-
-  // associate context to NULL to disable the IME.
-  ::ImmAssociateContext(hwnd, NULL);
-
-  if ( hImc != NULL )
-  {
-    ::ImmReleaseContext(hwnd, hImc);
-  }
-
-  return true;
-}
-
-bool InputMethodContext::fillAppIMC(HWND hwnd)
-{
-  if ( hwnd != NULL && ::IsWindow(hwnd) )
-  {
-    HIMC hImc = ::ImmGetContext(hwnd);
-    if ( ! m_appIMC.insert(hImc).second )
-    {
-      ::ImmReleaseContext(hwnd, hImc);
-    }
-  }
-
-  return true;  // continue search next.
-}
-
-bool InputMethodContext::getIMEWindow(HWND hwnd)
-{
-  if ( hwnd != NULL && ::IsWindow(hwnd) )
-    m_hwndIME = ::ImmGetDefaultIMEWnd(hwnd);
-
-  if ( m_hwndIME != NULL )
-    return false;     // created the HWND, will not try more
-  else
-    return true;      // try next window to create IME HWND
-}
-
-InputMethodContext::LanguageID InputMethodContext::getLanguage(void)
-{
-  HKL hKeyboardLayout = ::GetKeyboardLayout(0);
-  switch (LOWORD(hKeyboardLayout))
-  {
-  case LID_TRADITIONAL_CHINESE:
-    return TRADITIONAL_CHINESE;
-  case LID_JAPANESE:
-    return JAPANESE;
-  case LID_KOREAN:
-    return KOREAN;
-  case LID_SIMPLIFIED_CHINESE:
-    return SIMPLIFIED_CHINESE;
-  default:
-    return DEFAULT;
-  }
 }
 
 //
@@ -338,23 +606,4 @@ void InputMethodContext::fixupSetIMEMode(DWORD& convMode, DWORD& sentMode, BOOL 
   sentMode = newSentMode;
 }
 
-void InputMethodContext::forEachFirefoxWindow(pfxForeachCallback callback)
-{
-  EnumCallbackParam params;
-  params.pThis = this;
-  params.pCallback = callback;
-  ::EnumThreadWindows(::GetCurrentThreadId(), &enumWndProc, reinterpret_cast<LPARAM>(&params));
-}
-
-BOOL CALLBACK InputMethodContext::enumWndProc(HWND hwnd, LPARAM lParam)
-{
-  EnumCallbackParam* pParam = reinterpret_cast<EnumCallbackParam*>(lParam);
-  assert ( pParam != NULL );
-  assert ( pParam->pThis != NULL );
-  assert ( pParam->pCallback != NULL );
-
-  InputMethodContext* pThis = pParam->pThis;
-  pfxForeachCallback pfxCallback = pParam->pCallback;
-  return ((pThis->*pfxCallback)(hwnd)) ? TRUE : FALSE;
-}
-
+#endif // _USE_IME_FLAGS_FIXUP

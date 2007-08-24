@@ -108,6 +108,17 @@ NS_IMETHODIMP CTabImSwitchApp::Init()
   return NS_ERROR_UNEXPECTED;
 }
 
+/* boolean hasMSPY (); */
+NS_IMETHODIMP CTabImSwitchApp::HasMSPY(PRBool *_retval)
+{
+  if ( _retval == NULL )
+    return NS_ERROR_NULL_POINTER;
+
+  *_retval = (KeyboardLayout::hasMSPY()?PR_TRUE:PR_FALSE);
+
+  return NS_OK;
+}
+
 /* readonly attribute AString inputMethodList; */
 NS_IMETHODIMP CTabImSwitchApp::GetInputMethodList(nsAString & aInputMethodList)
 {
