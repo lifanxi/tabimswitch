@@ -3,14 +3,14 @@
 
 = TabIMSwitchの紹介 =
 
-TabIMSwitchは!FireFoxのある拡張機能ので、!FireFoxに使うことが必要だ。
+TabIMSwitchは!FireFoxのある拡張機能ので、!FireFoxに使うことが必要である。
 
 Firefoxを使う際に、入力ソフトのサポート不足に悩むことがあるかもしれない。この拡張機能は、!FireFoxが智能的に言語入力ソフトを切り換えることを可能にするために開発された。
 
 
 = 始める方は？ =
 
-TabIMSwitchの使い方はとても易いですから環境設定も不必要です。最新バージョンのTabIMSwitchを[http://code.google.com/p/tabimswitch/downloads/list ダウンロード]し、!FireFoxのウィンドウへドラッグアンドドロップし、「Yes」をクリックしてインストールすると、このツールの長所がそう簡単に感じられる。
+TabIMSwitchの使い方はとても易いから環境設定も不必要です。最新バージョンのTabIMSwitchを[http://code.google.com/p/tabimswitch/downloads/list ダウンロード]し、!FireFoxのウィンドウへドラッグアンドドロップし、「Yes」をクリックしてインストールすると、このツールの長所がそう簡単に感じられる。
 
 = 相違点は？ =
 
