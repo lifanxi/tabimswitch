@@ -15,4 +15,4 @@ Other Language [KnownIssuesZhcn 简体中文]
   # Click "Details" at "Language" tab.
   # In the "Text Service and Input Languages" window, *uncheck* the check box "Extend support of advanced text services to all programs".
 
-[http://tabimswitch.googlecode.com/files/deselect-advanced-text-services.PNG]
+[http://tabimswitch.googlecode.com/files/deselect-advanced-text-services.png]
