@@ -1,9 +1,7 @@
 #labels Phase-Support,KownIssues,Featured
-#Kown Issues
-
 = Kown Issues =
 
-Other Language [KnownIssuesZhcn 简体中文]
+Other Language *[KnownIssuesZhcn 简体中文]* 
 
 == version 1.0.0.9 ==
 
