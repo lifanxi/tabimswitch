@@ -29,6 +29,6 @@ Browse the Internet and use the !FireFox as usual. But you may feel more conveni
 
 If you are a GMail user, you may already find a "Enter a comment" below. Feel free to type your comments here.
 
-If you are not able to comment here, draft an email to us (the project members), with your questions and/or suggestions. Notice that the author can only read English, Chinese. Please draft Email with these languages.
+If you are not able to comment here, draft an email to ftofficer.zhangc AT gmail.com, with your questions and/or suggestions. Notice that the author can only read English, Chinese. Please draft Email with these languages.
 
 If you are a Chinese user, you can also post comments on [http://forums.mozine.cn/index.php?showtopic=17833 mozine.cn forum].
