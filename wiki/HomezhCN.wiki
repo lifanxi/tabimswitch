@@ -12,6 +12,6 @@ TabIMSwitch是一个FireFox的扩展。这个扩展可以记录!FireFox的每个
 
 当前1.0版本仅支持Windows 2000/XP/2003上的FireFox 2.0.0.`*`。我们希望可以将其移植到Linux SCIM平台和其它的FireFox版本上。
 
-现在，[http://code.google.com/p/tabimswitch/downloads/list 下载]并且享用这种功能的提升吧！
+现在，阅读一下[TutorialZhcn 使用指南]并且开始使用吧！
 
 _如果你觉得这个扩展有用，并且你能够写英文，请访问该扩展 [https://addons.mozilla.org/en-US/firefox/addon/5413 在Mozilla扩展网站上的主页]，并且发表一些看法（Reviews）。只有有了足够多的Review，这个扩展才可以成为Mozilla的公开扩展，就会有更多需要的人知道并且使用它。_
