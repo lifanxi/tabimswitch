@@ -1,6 +1,8 @@
 #labels Featured,Phase-Deploy,Tutorial
 = TabIMSwitch Tutorial =
 
+Other languages: *[TutorialZhcn 简体中文]* *[TutorialJa 日本語]*
+
 == What is it? ==
 
 TabIMSwitch is a !FireFox extension. When you are using !FireFox, you may have suffered inconvinent caused by the lack of Input Method support. This extension is designed to enable !FireFox switching Input Method intelligently.
