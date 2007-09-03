@@ -1,10 +1,13 @@
 #labels Featured,Phase-Support,ChangeLog
 #The change history of TabIMSwitch
 
-=== Version 1.1.0.1 (August 19, 2007)===
+=== Version 1.1.0.32 (September 4, 2007)===
+  * [New!] Added more detailed input method control, such as Chinese Half Shape mode or Full Shape Mode, Japanese Hiragana/Katakana Mode.
+
+=== Version 1.1.0.1 Beta (August 19, 2007)===
   * Changed the debugging settings to !FireFox preference system.
   * Added advanced debug logging system to the extension.
-  * [Featured!] Separate multiple language environment support with single language environment, to avoid adding English input method automatically. 
+  * Separate multiple language environment support with single language environment, to avoid adding English input method automatically. 
 
 === Version 1.0.0.9 (August 9, 2007)===
   * Fixed a critical error when building the extension: Old extensions are all built with dynamic linking to VS8 CRT lib, which will cause the extension failed to be load. From this version, changed to static link.
