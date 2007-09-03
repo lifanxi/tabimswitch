@@ -82,7 +82,7 @@ private:
   void forEachFirefoxWindow(pfxForeachCallback callback);
   static BOOL CALLBACK enumWndProc(HWND hwnd, LPARAM lParam);
 
-  void onMessage(PMSG pMsg);
+  bool onMessage(PMSG pMsg);
   void onSendMessage(PCWPSTRUCT pMsg);
 
 private:

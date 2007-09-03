@@ -102,37 +102,15 @@ void InputMethodContext::stopMessageObserve(void)
   }
 }
 
-void InputMethodContext::onMessage(PMSG pMsg)
+bool InputMethodContext::onMessage(PMSG pMsg)
 {
-  (pMsg);
-#if 0
-  if ( pMsg->message == WM_INPUTLANGCHANGE 
-     || pMsg->message == WM_INPUTLANGCHANGEREQUEST )
+  if ( pMsg->message == WM_INPUTLANGCHANGEREQUEST )
   {
-    LOGGER(LOG_DEBUG) << "Input language changed by command "
-      << (pMsg->message==WM_INPUTLANGCHANGE?"WM_INPUTLANGCHANGE":"WM_INPUTLANGCHANGREQUEST") << endlog;
-    if ( m_hwndIME && ::IsWindow(m_hwndIME) )
-    {
-      if ( m_savedIMC )
-      {
-        LOGGER(LOG_DEBUG) << "The saved disabled IMC " << m_savedIMC << " is destroyed." << endlog;
-        HIMC hTmpImc = m_savedIMC;
-        m_savedIMC = NULL;
-        ::ImmReleaseContext(m_hwndIME, hTmpImc);
-
-        //
-        // Because when we have chance to process this message, the thread have
-        // returned from the "set input method to new tab" flow. (Firefox UI is
-        // single threaded and WM_INPUTLANGCHANGE/WM_INPUTLANGCHANGEREQUEST is POSTED to message queue.)
-        // So if new input method is also disable, it will set m_enable to false and keep the
-        // save IMC there, to be changed by this notification.
-        //
-        if ( ! m_enabled )
-          disable();
-      }
-    }
+    LOGGER(LOG_DEBUG) << "Request to change input language to " << reinterpret_cast<HKL>(pMsg->lParam)
+      << " fSysCharSet=" << reinterpret_cast<void*>(pMsg->wParam) << endlog;
   }
-#endif
+
+  return true;
 }
 
 void InputMethodContext::onSendMessage(PCWPSTRUCT pMsg)
@@ -156,7 +134,10 @@ LRESULT CALLBACK InputMethodContext::MessageProviderProc(int code, WPARAM wParam
       {
         InputMethodContext* imc = *traIt;
         assert ( imc != NULL );
-        imc->onMessage(pMsg);
+        if ( ! imc->onMessage(pMsg) )
+        {
+          // return 0;
+        }
       }
     }
   }

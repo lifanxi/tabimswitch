@@ -174,7 +174,7 @@ void MultilingualKeyboardLayout::setCurrent(std::wstring const& kbl)
     pszKblName = primaryKblName;
   }
 
-  HKL hKeyboadLayout = ::LoadKeyboardLayoutW(pszKblName, 0);
+  HKL hKeyboadLayout = ::LoadKeyboardLayoutW(pszKblName, KLF_ACTIVATE);
   if ( hKeyboadLayout == NULL )
     throw std::runtime_error("Unable to load keyboard layout.");
 

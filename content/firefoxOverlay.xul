@@ -22,12 +22,12 @@
 
   <script src="debugging.js"/>
   <script src="tabimswitch.js"/>
-  <script src="overlay.js" />
+<!--  <script src="overlay.js" /> -->
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="tabimswitch-strings" src="chrome://tabimswitch/locale/tabimswitch.properties"/>
   </stringbundleset>
-
+<!--
   <menupopup id="menu_ToolsPopup">
     <menu id="menu_TabIMSwitchMenu" label="&tabimswitch.submenu.label;"
          accesskey="&tabimswitch.submenu.accesskey;" insertafter="javascriptConsole">
@@ -38,5 +38,5 @@
       </menupopup>
     </menu>
   </menupopup>
-
+-->
 </overlay>
