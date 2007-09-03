@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+   <Description about="urn:mozilla:extension:TabImSwitch@ftofficer">
+     <em:updates>
+       <Seq>
+        <li resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.32"/>
+       </Seq>
+     </em:updates>
+   </Description>
+
+   <Description about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.32">
+     <em:version>1.1.0.32</em:version>
+     <em:targetApplication>
+       <Description>
+         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+         <em:minVersion>2.0</em:minVersion>
+         <em:maxVersion>2.0.0.*</em:maxVersion>
+         <em:updateLink>http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.32.xpi</em:updateLink>
+         <em:updateHash>sha1:6d55deba4b9fd7a4fe35b3c08b6e99d276f00c84</em:updateHash>
+       </Description>
+     </em:targetApplication>
+   </Description>
+
+</RDF>
