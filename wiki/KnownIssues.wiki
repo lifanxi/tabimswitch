@@ -1,5 +1,5 @@
 #labels Phase-Support,KownIssues,Featured
-= Kown Issues =
+= Known Issues =
 
 Other Language *[KnownIssuesZhcn 简体中文]* 
 
