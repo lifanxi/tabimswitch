@@ -3,8 +3,7 @@
 
 Other Language *[KnownIssuesZhcn 简体中文]* 
 
-== version 1.1.0.32 ==
-== version 1.0.0.9 ==
+== version 1.1.0.32 and previous versions ==
 
 === The input method is not able to be saved on Windows XP and Vista.===
 *Behavior:* In some system, the input method of one tab may not be able to be saved. For example, you change the Input Method to MSPY 2003 at one tab, and change to another tab. The Input method is closed as expected. But when you change back to the first tab, input method is not changed back accordingly.
