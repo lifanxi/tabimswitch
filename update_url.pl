@@ -30,3 +30,4 @@ else {
   die $usage;
 }
 
+exit 1;

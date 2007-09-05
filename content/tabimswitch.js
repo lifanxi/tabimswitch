@@ -24,9 +24,25 @@ var prefObserver =
        .getService(Components.interfaces.nsIPrefService)
        .getBranch("extensions.tabimswitch.");       
     this.prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
-    this.prefs.addObserver("", prefObserver, false);
+    this.register();
 
     this._loadInitPref();
+  },
+
+  register: function()
+  {
+    if ( this.prefs )
+    {
+      this.prefs.addObserver("", prefObserver, false);
+    }
+  },
+  
+  unregister: function()
+  {
+    if (this.prefs)
+    {
+      this.prefs.removeObserver("", prefObserver);
+    }
   },
   
   observe: function(subject, topic, data)
@@ -156,15 +172,11 @@ var tabimswitch = {
 
   onWindowUnload: function(e)
   {
-    if ( e.target == window )
-    {
-      debugging.trace("onWindowUnload");
-      debugging.debugLog("Will destroy a browser window.");
-      this.destroy();
-      // this.notifyTabChange(getBrowser());
-    }
+    debugging.trace("onWindowUnload");
+    debugging.debugLog("Will destroy a browser window.");
+    this.destroy();
   },
-
+  
   onTabDocLoad: function(e)
   {
     debugging.trace("onTabDocLoad");
@@ -377,10 +389,12 @@ var tabimswitch = {
     if ( ! this.initialized )
       return;
       
-    for ( var i=0; i<this._openedTabs.length(); ++i )
+    for ( var i=0; i<this._openedTabs.length; ++i )
     {
-      this._removeTabInputMethod(this._openedTabs[i]);
+      this._removeInputMethodByName(this._openedTabs[i]);
     }
+    
+    prefObserver.unregister();
   },
 
   //
@@ -620,23 +634,7 @@ var tabimswitch = {
       if ( this._openedTabs )
       {
         tabName = this._getTabLinkedPageId(tab);
-        if ( tabName )
-        {
-          try
-          {
-            this._manager.setTabInputMethod(tabName, null);
-            this._openedTabs = this._removeFrom(this._openedTabs, tabName);
-            debugging.infoLog("Removeed tab Input Method: <"+tabName+">");
-          }
-          catch (ex )
-          {
-            debugging.warning("Not able to remove tab input method <"+tabName+">");
-          }
-        }
-        else
-        {
-          debugging.fatalError("_removeTabInputMethod failed: tab does not have a linked page.");
-        }
+        this._removeInputMethodByName(tabName);
       }
       else
       {
@@ -646,6 +644,27 @@ var tabimswitch = {
     else
     {
       debugging.warning("_removeTabInputMethod: not tab to save.");
+    }
+  },
+
+  _removeInputMethodByName: function(tabName)
+  {
+    if ( tabName )
+    {
+      try
+      {
+        this._manager.setTabInputMethod(tabName, null);
+        this._openedTabs = this._removeFrom(this._openedTabs, tabName);
+        debugging.infoLog("Removeed tab Input Method: <"+tabName+">");
+      }
+      catch (ex )
+      {
+        debugging.warning("Not able to remove tab input method <"+tabName+">");
+      }
+    }
+    else
+    {
+      debugging.fatalError("_removeTabInputMethod failed: tab does not have a linked page.");
     }
   },
 

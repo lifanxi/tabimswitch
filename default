@@ -6,4 +6,4 @@ CLEAN_UP=1
 ROOT_FILES=
 ROOT_DIRS="defaults components"
 BEFORE_BUILD=./incBuild.pl
-AFTER_BUILD=
+AFTER_BUILD=./rename_output.pl
