@@ -6,20 +6,20 @@
    <Description about="urn:mozilla:extension:TabImSwitch@ftofficer">
      <em:updates>
        <Seq>
-        <li resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.36"/>
+        <li resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.37"/>
        </Seq>
      </em:updates>
    </Description>
 
-   <Description about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.36">
-     <em:version>1.1.0.36</em:version>
+   <Description about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.37">
+     <em:version>1.1.0.37</em:version>
      <em:targetApplication>
        <Description>
          <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
          <em:minVersion>2.0</em:minVersion>
          <em:maxVersion>2.0.0.*</em:maxVersion>
-         <em:updateLink>http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.36.xpi</em:updateLink>
-         <em:updateHash>sha1:83655ffc041e057b7bd376df13cd57d3126ce4d5</em:updateHash>
+         <em:updateLink>http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.37.xpi</em:updateLink>
+         <em:updateHash>sha1:4f418a46064b8eea604a8aa591ee13579786525c</em:updateHash>
        </Description>
      </em:targetApplication>
    </Description>
