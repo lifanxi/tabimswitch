@@ -1,4 +1,4 @@
-#labels Phase-Support,KownIssues,Featured
+#labels Phase-Support,KnownIssues,Featured
 = Known Issues =
 
 Other Language *[KnownIssuesZhcn 简体中文]* 
