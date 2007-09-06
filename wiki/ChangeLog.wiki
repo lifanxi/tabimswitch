@@ -1,6 +1,9 @@
 #labels Featured,Phase-Support,ChangeLog
 #The change history of TabIMSwitch
 
+=== Version 1.1.0.37 (September 6, 2007)===
+  * Fixed a resource leak.
+
 === Version 1.1.0.32 (September 4, 2007)===
   * [New!] Added more detailed input method control, such as Chinese Half Shape mode or Full Shape Mode, Japanese Hiragana/Katakana Mode.
 
