@@ -1,4 +1,4 @@
-#labels Phase-Implementation,Build,HOWTO
+#labels Phase-Implementation,Build,HOWTO,Language-EN
 = How to Build TabIMSwitch =
 You can check out source code of TabIMSwitch and build it by yourself.
 
@@ -62,3 +62,4 @@ Open Cygwin shell, and change directory to `$(SRC_ROOT)`, type the following com
 If you can see the tabimswitch.xpi file at `$(SRC_ROOT)`, congratulations, your own version of TabIMSwitch is built!
 
 For more information, please refer to [http://developer.mozilla.org Mozilla Developer Center].
+ 
