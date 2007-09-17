@@ -1,4 +1,4 @@
-#labels Featured,Phase-Support,ChangeLog
+#labels Featured,Phase-Support,ChangeLog,Language-EN
 #The change history of TabIMSwitch
 
 === Version 1.1.0.37 (September 6, 2007)===
@@ -28,3 +28,4 @@
 === Version 1.0.0.1 (July 28, 2007)===
   * The first runnable version, from then, TabIMSwitch was born.
   * The birthday: *28, July 2007, China Standard Time (GMT+08:00)*
+ 
