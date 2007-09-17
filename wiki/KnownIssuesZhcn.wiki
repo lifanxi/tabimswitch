@@ -2,7 +2,7 @@
 = 已知问题 =
 其他语言 *[KnownIssues English]* 
 
-== 1.1.0.32 及以前版本 ==
+== 1.1.0.37 及以前版本 ==
 
 === 在Windows XP和Vista上面无法保存标签页的输入法状态 ===
 
@@ -14,5 +14,6 @@
   # 在打开的“文字服务和输入语言”窗口当中，*取消选中* “将高级文字服务支持应用于所有程序”前面的复选框。
 
 [http://tabimswitch.googlecode.com/files/deselect-advanced-text-services-zhcn.png]
+ 
  
  
