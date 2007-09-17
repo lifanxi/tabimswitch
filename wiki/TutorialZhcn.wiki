@@ -1,4 +1,4 @@
-#labels Tutorial,Zhcn
+#labels Tutorial,Language-ZHCN
 = TabIMSwitch 使用指南 =
 
 其他语言: *[Tutorial English]* *[TutorialJa 日本語]*
@@ -34,3 +34,4 @@ TabIMSwitch就是这样设计的。我将其设计成为一个后台的扩展，
 如果你不能在这里输入，你可以发信到ftofficer.zhangc AT gmail.com。注意作者只能够阅读英语和汉语。因此，请尽量用作者可以理解的语言发信。
 
 如果你能够阅读和写作中文，你还可以到[http://forums.mozine.cn/index.php?showtopic=17833  Mozine中国论坛]上面跟帖。
+ 
