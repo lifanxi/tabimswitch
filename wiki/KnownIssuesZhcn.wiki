@@ -1,4 +1,4 @@
-#labels Phase-Support,KnownIssues,Zhcn
+#labels Phase-Support,KnownIssues,Language-zhcn
 = 已知问题 =
 其他语言 *[KnownIssues English]* 
 
@@ -14,3 +14,4 @@
   # 在打开的“文字服务和输入语言”窗口当中，*取消选中* “将高级文字服务支持应用于所有程序”前面的复选框。
 
 [http://tabimswitch.googlecode.com/files/deselect-advanced-text-services-zhcn.png]
+ 
