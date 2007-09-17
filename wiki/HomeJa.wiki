@@ -1,4 +1,4 @@
-#labels Home,Ja,Phase-Support,Language-JA
+#labels Home,Phase-Support,Language-JA
 Translated by ziyuang
 
 Other Languages: *[http://tabimswitch.googlecode.com English]* *[HomezhCN 简体中文]*
@@ -16,5 +16,6 @@ TabIMSwitchというのは、!FireFox対応の拡張機能の一つである。�
 いま、[http://code.google.com/p/tabimswitch/downloads/list ダウンロード]で機能アップグレードを楽しみにしましょ。
 
 _もし君はこの拡張機能が役立つと思うなら、[https://addons.mozilla.org/en-US/firefox/addon/5413 Mozillaのアドオンサイトでこの拡張機能のホームページ]を移動してください。英語でレビューを発表することが一番。十分なレビューが集まるだけで、この拡張機能はMozillaの公開拡張機能になる。するとより多くの人にはこれを知らせてから使うことになる。_
+ 
  
  
