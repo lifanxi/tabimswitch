@@ -6,4 +6,4 @@ CLEAN_UP=1
 ROOT_FILES=
 ROOT_DIRS="defaults components"
 BEFORE_BUILD="./update_url.pl remove"
-AFTER_BUILD="./mozilla-after"
+AFTER_BUILD="./update_url.pl restore"
