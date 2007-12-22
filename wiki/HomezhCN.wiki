@@ -10,7 +10,7 @@ TabIMSwitch是一个FireFox的扩展。这个扩展可以记录!FireFox的每个
     * 在用户把输入焦点切换到地址栏的时候，自动切换成英文输入法。
     * 每个窗口的输入法状态可以在切换窗口的时候自动切换。
 
-当前1.0版本仅支持Windows 2000/XP/2003上的FireFox 2.0.0.`*`。我们希望可以将其移植到Linux SCIM平台和其它的FireFox版本上。
+当前1.0版本仅支持Windows 2000/XP/2003上的!FireFox 2.0.0.`*`和3.0 Beta。我们希望可以将其移植到Linux SCIM平台上，但我们不打算支持旧的!FireFox 1.5版。
 
 现在，阅读一下[TutorialZhcn 使用指南]并且开始使用吧！
 
