@@ -23,13 +23,13 @@ set _pkg=tabimswitch-%_ver%-src.zip
 echo Build source code package for version %_ver%...
 
 svn checkout http://tabimswitch.googlecode.com/svn/tags/release-%_ver% %_dir%
-if errorlevel 0 (
+if errorlevel 1 (
   echo Checkout failed.
   goto finish
 )
 
-for /f %%i in ('find %_dir% -iname .svn') do rmdir /s /q %%i
-"D:\Program Files\7-Zip\7z.exe" a %_pkg% %_dir%
+rem for /f %%i in ('find %_dir% -iname .svn') do rmdir /s /q %%i
+"D:\Program Files\7-Zip\7z.exe" a %_pkg% -xr0!*.svn* %_dir%
 googlecode_upload -s "[Source Code] TabImSwitch %_ver% Source Code" -p tabimswitch -u ftofficer.zhangc -l "Type-Source" %_pkg%
 
 goto finish
@@ -39,3 +39,5 @@ echo %~n0.cmd [version]
 echo.
 
 :finish
+if exist "%_dir%" rmdir /s /q "%_dir%"
+if exist "%_pkg%" del "%_pkg%"

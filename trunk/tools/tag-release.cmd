@@ -38,4 +38,8 @@ if not "%_pending_op%"=="0" (
 
 svn copy -m "Create release tag release-%_ver%" https://tabimswitch.googlecode.com/svn/trunk https://tabimswitch.googlecode.com/svn/tags/release-%_ver%
 
+:usage
+echo %~n0.cmd [version]
+echo.
+
 :finish
