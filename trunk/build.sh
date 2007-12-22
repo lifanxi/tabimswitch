@@ -73,6 +73,9 @@ OUTPUT_DIR=output
 rm -f $APP_NAME.jar $APP_NAME.xpi files
 rm -rf $TMP_DIR
 
+# make install.rdf
+/usr/bin/perl ./tools/make-update-rdf.pl --output=install.rdf install.rdf.src
+
 $BEFORE_BUILD
 
 mkdir --parents --verbose $TMP_DIR/chrome
@@ -135,6 +138,7 @@ if [ $CLEAN_UP = 0 ]; then
   mv $TMP_DIR/chrome/$APP_NAME.jar .
 else
   rm ./files
+  rm install.rdf
 fi
 
 # remove the working files
