@@ -17,7 +17,7 @@
        <Description>
          <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
          <em:minVersion>2.0</em:minVersion>
-         <em:maxVersion>2.0.0.*</em:maxVersion>
+         <em:maxVersion>3.0b3</em:maxVersion>
          <em:updateLink>http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.37.xpi</em:updateLink>
          <em:updateHash>sha1:4f418a46064b8eea604a8aa591ee13579786525c</em:updateHash>
        </Description>
