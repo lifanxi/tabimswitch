@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-./update_url.pl restore
-./rename_output.pl

@@ -31,6 +31,7 @@
 # default configuration file is ./config_build.sh, unless another file is
 # specified in command-line. Available config variables:
 APP_NAME=          # short-name, jar and xpi files name. Must be lowercase with no spaces
+APP_VERSION=       # version name, #.#.#.### format
 CHROME_PROVIDERS=  # which chrome providers we have (space-separated list)
 CLEAN_UP=          # delete the jar / "files" when done?       (1/0)
 ROOT_FILES=        # put these files in root of xpi (space separated list of leaf filenames)
@@ -50,8 +51,20 @@ if [ -z $APP_NAME ]; then
   exit;
 fi
 
+# set the app version.
+APP_VERSION=`cat ./buildversion`
+
+if [ -z $APP_VERSION ]; then
+  echo "You need to create appversion file first!"
+  echo "Read comments at the beginning of this script for more info."
+  exit;
+fi
+
+echo "Build for version $APP_VERSION..."
+
 ROOT_DIR=`pwd`
 TMP_DIR=build
+OUTPUT_DIR=output
 
 #uncomment to debug
 #set -x
@@ -63,6 +76,9 @@ rm -rf $TMP_DIR
 $BEFORE_BUILD
 
 mkdir --parents --verbose $TMP_DIR/chrome
+if [ ! -e $OUTPUT_DIR ]; then
+  mkdir --verbose $OUTPUT_DIR
+fi
 
 # generate the JAR file, excluding CVS and temporary files
 JAR_FILE=$TMP_DIR/chrome/$APP_NAME.jar
@@ -108,8 +124,8 @@ if [ -f "chrome.manifest" ]; then
 fi
 
 # generate the XPI file
-echo "Generating $APP_NAME.xpi..."
-zip -r ../$APP_NAME.xpi *
+echo "Generating $APP_NAME-$APP_VERSION.xpi..."
+zip -r ../$OUTPUT_DIR/$APP_NAME-$APP_VERSION.xpi *
 
 cd "$ROOT_DIR"
 
