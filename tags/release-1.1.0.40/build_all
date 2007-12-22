@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+./tools/inc-version.pl buildversion buildversion
+./build.sh default
+./tools/make-update-rdf.pl update.rdf.src
+./build.sh mozilla
