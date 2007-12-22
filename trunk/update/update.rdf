@@ -2,22 +2,22 @@
 <RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
          xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <RDF:Description RDF:about="rdf:#$hwpR43"
+  <RDF:Description RDF:about="rdf:#$eZqqj"
                    em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                    em:minVersion="2.0"
                    em:maxVersion="3.0b3"
-                   em:updateLink="http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.43.xpi"
-                   em:updateHash="sha1:6fd912870a1e92d00905f685761a6af4794e6c23" />
-  <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.43"
-                   em:version="1.1.0.43"
-                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBAE5IeR1xJm2hyzfcBv+opku6eWUcYwrd7L1LZNNAXOhTRAbgigacowN2G0dJoTpqLPtG1U5hYQYbfyYdHELkgQG0JgcGBXxsEK/ezxk2OkbCHyPzgxT0Bcfolvg9gwPIawDni2tVOqk8kIj1UwAi2gDOj4/3uzpzlFQ/XV9ymNtv">
-    <em:targetApplication RDF:resource="rdf:#$hwpR43"/>
+                   em:updateLink="http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.40.xpi"
+                   em:updateHash="sha1:db9e4031679d0384e2993d1ae21bfad27dd99446" />
+  <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.40"
+                   em:version="1.1.0.40"
+                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBACmyVWziBs7iINOy3yTuC18SfWaytHNMDHa0jCLiShV5CnoZBZPLs7F5gVRuhdczBCq95JMtCD60HFUsj+Ygi3T6R3e+0GxZITraDrvqEtstbFZpDbubJTuJ1LWrGmHVNNMtw03TQrlYCDflQaumy4YPCcvusWuxdX6qkVmrb18q">
+    <em:targetApplication RDF:resource="rdf:#$eZqqj"/>
   </RDF:Description>
   <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer"
-                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBAHhvmji2tx8LyJ1utiNf6qCGPS8sTg38aP17zH0QiORXE8vRmFrMRCmlcQ4v7iTClnXygYjjUrvSGXfsslWERdxC4Si3q6EbwqWxHJ6lvhBGp/gBmaF/GYJav5x2VbTVIpoE8mlaDQUGcBH9j9h76i98VWsCfc6bXN1xzOv3OE3A">
-    <em:updates RDF:resource="rdf:#$ewpR43"/>
+                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBABcq8BJHzEGgnxxt3OrIT1Eh2Y4TFv5Pa1NvBDqF8kO4d32cbIRe4ST3ii19pjccWOlxV7zUwCFmmvakvglkOfkdhjzI/su9sNGPafw0CZ1C2J1cWOOBcCEin9ybUhdCPtrIbA33ilHFk2byEV5w1/I3ap3uKRlX3DtdnYrqglST">
+    <em:updates RDF:resource="rdf:#$bZqqj"/>
   </RDF:Description>
-  <RDF:Seq RDF:about="rdf:#$ewpR43">
-    <RDF:li RDF:resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.43"/>
+  <RDF:Seq RDF:about="rdf:#$bZqqj">
+    <RDF:li RDF:resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.40"/>
   </RDF:Seq>
 </RDF:RDF>
