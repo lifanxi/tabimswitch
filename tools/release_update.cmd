@@ -1,2 +1,0 @@
-svn rm -m "Delete old update RDF"  https://tabimswitch.googlecode.com/svn/update/update.rdf
-svn copy -m "Use latest update RDF" https://tabimswitch.googlecode.com/svn/trunk/update.rdf https://tabimswitch.googlecode.com/svn/update/update.rdf
