@@ -1,5 +1,5 @@
 #labels Language-EN,Phase-Support,FAQ,Featured
-#Frequently Asked Questions about the extension.
+Other Language [FAQZhcn 简体中文]
 
 == Frequently Asked Questions ==
 
