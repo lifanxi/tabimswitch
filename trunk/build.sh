@@ -138,7 +138,7 @@ if [ $CLEAN_UP = 0 ]; then
   mv $TMP_DIR/chrome/$APP_NAME.jar .
 else
   rm ./files
-  rm install.rdf
+  # rm install.rdf
 fi
 
 # remove the working files

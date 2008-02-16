@@ -2,22 +2,22 @@
 <RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
          xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <RDF:Description RDF:about="rdf:#$n6.fo"
+  <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.42"
+                   em:version="1.1.0.42"
+                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBAJStfXMN7c45C8TWOhptbsvUApHjSipROVhPmmmJRtE2INxh7ApNS/m6Y610CaUjBbtRsFSzHz9tK6SiMFHBEAOov4E72LFSIzil1dmD2Ia8OTmlb4cqfp6ZoIrVRJF9pFW7WEZnbNAK6G50/rwtjWvYg/qhuG3KolXZYqEPagvT">
+    <em:targetApplication RDF:resource="rdf:#$roG4I1"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$roG4I1"
                    em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                    em:minVersion="2.0"
                    em:maxVersion="3.0b3"
-                   em:updateLink="http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.41.xpi"
-                   em:updateHash="sha1:0f0acbdd7df6ddd712541d5e766fb0ce9f07a56d" />
-  <RDF:Seq RDF:about="rdf:#$k6.fo">
-    <RDF:li RDF:resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.41"/>
+                   em:updateLink="http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.42.xpi"
+                   em:updateHash="sha1:52d8b06fb0e736e8003b1f0f9355e9757e932e45" />
+  <RDF:Seq RDF:about="rdf:#$ooG4I1">
+    <RDF:li RDF:resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.42"/>
   </RDF:Seq>
-  <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.41"
-                   em:version="1.1.0.41"
-                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBAK/6m4EaPm+g5xDLNUGdgWJML/tK8zWvPTCOZ+DBidH7KtKQYRMZcmNjz+ZH+1UPS6ooBOnVt5mjU1hp760p3sTXQcNkyplGICuG7ZSov/3VB4t/nkGlPXD3YYNWcxBnEwLhsMICcKrDXfCW7IqOHFGzz4934p2oKfgupsR0UPnF">
-    <em:targetApplication RDF:resource="rdf:#$n6.fo"/>
-  </RDF:Description>
   <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer"
-                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBABD6fGer+EHdR6lq/E1i6Pe75lEM2h7yT+y/sV9vxhihC42DFok/tJgUQBKW1aKAHaOAg6JDkyIVjSWrRlsBgpEqrg/BxEM27526Ru5payGeeT/sHqT7FdvK+Qx9PmUFZkw5s+/go0seO+TgWv3jVTj2L3TQJ9Wy7bNzPNCGYKCU">
-    <em:updates RDF:resource="rdf:#$k6.fo"/>
+                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBACMqVaf7EZZ/SVNxTMhilcrdJvKmBOjDvd2MlVEB+tBVC9J9P5EO5OytgZBfWoAieH2KSJ+0mDkjBUyE31Y2gjYTNBgGTiWDj3pcEMb2Qu5gexXFveYWBdbLgGaH79vGkv84mX1v+Aam3Wnz1Y4XGOLRdJR6Y6Z9tZhqkjbU0xbJ">
+    <em:updates RDF:resource="rdf:#$ooG4I1"/>
   </RDF:Description>
 </RDF:RDF>
