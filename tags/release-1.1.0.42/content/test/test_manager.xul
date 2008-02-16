@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+  - Copyright (c) 2007 ftofficer <ftofficer.zhangc@gmail.com>
+  -
+  - Permission to use, copy, modify, and distribute this software for any
+  - purpose with or without fee is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  - WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  - MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  - ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  - WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  - ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  - OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  - -->
+
+<!-- This is a test page for TabImSwitch XPCOM component. -->
+
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window
+    id="TabIMSwitch_Testing"
+    title="TabIMSwitch Testing Page"
+    orient="horizontal"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script>
+<![CDATA[
+var _manager = null;
+
+function _getManager() {
+  if ( _manager == null ) {
+    _manager = _createManager();
+  }
+
+  return _manager;
+}
+
+function _createManager() {
+  try
+  {
+    var cid = "@tabimswitch.sourceforge.net/manager;1";
+    var obj = Components.classes[cid].createInstance();
+    obj = obj.QueryInterface(Components.interfaces.ITabInputMethodManager);
+    return obj;
+  }
+  catch(ex)
+  {
+    return null;
+  }
+}
+
+function onSet_Click(evt) {
+  var mgr = _getManager();
+  var key = document.getElementById("key").value;
+  var v = document.getElementById("value").value;
+  if ( ! key || ! v ) {
+    alert("Please input both Key and Value!");
+    return;
+  }
+
+  mgr.setTabInputMethod(key, v);
+}
+
+function onGet_Click(evt) {
+  var mgr = _getManager();
+  var key = document.getElementById("key").value;
+  if ( ! key ) {
+    alert("Please input Key");
+    return;
+  }
+
+  v = mgr.getTabInputMethod(key);
+  if ( v ) {
+    document.getElementById("value").value = v;
+  }
+  else{
+    document.getElementById("value").value = "<null>";
+  }
+}
+
+function onWindow_Load() {
+  document.getElementById("set").addEventListener("click", onSet_Click, false);
+  document.getElementById("get").addEventListener("click", onGet_Click, false);
+}
+
+window.addEventListener("load", onWindow_Load, false);
+
+// ]]>
+</script>
+
+<vbox>
+  <hbox>
+    <label control="key" value="Enter Key:"/>
+    <textbox id="key" value="key"/>
+  </hbox>
+  <hbox>
+    <label control="value" value="Value:"/>
+    <textbox id="value" value="value"/>
+  </hbox>
+  <hbox>
+    <button id="set" label="Set value"/>
+    <button id="get" label="Get value" />
+  </hbox>
+</vbox>
+</window>
