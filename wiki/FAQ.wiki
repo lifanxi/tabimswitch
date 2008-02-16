@@ -1,6 +1,10 @@
 #labels Language-EN,Phase-Support,FAQ,Featured
 #Frequently Asked Questions about the extension.
 
-= Frequently Asked Question List =
+== Frequently Asked Questions ==
 
-  # [FaqPopupWindow Why the input method changes back to English after I navigate back from a pop up window?]
+*Why the input method changes back to English after I navigate back from a pop up window?*
+
+You may try to enable Firefox's "Per Windows Per Keyboard Layout" setting. From about:config, change _`intl.keyboard.per_window_layout`_ to _`true`_, and restart Firefox.
+
+Because Firefox has this setting, so when I design TabIMSwitch, I did not support multiple wIndow IM state switch, because people can use this setting to workaround.
