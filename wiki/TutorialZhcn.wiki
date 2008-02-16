@@ -17,7 +17,9 @@ TabIMSwitch设计非常简单。到[http://code.google.com/p/tabimswitch/downloa
 
 TabIMSwitch就是这样设计的。我将其设计成为一个后台的扩展，只要完成它需要的工作，而不需要劳烦用户去做配置，因此并没有附带任何的窗口界面。
 
-为了知道是否功能正常，在地址栏里面输入chrome://tabimswitch/content/testing.xul，你会看到一个TabIMSwitch的测试页。按照上面的引导来了解TabIMSwitch是否工作正常。
+为了知道是否功能正常，请将当前的输入法换成非英文（比如你的拼音输入法），然后把光标移动到地址栏，如果输入法自动转换成了了英文，说明TabIMSwitch正常的工作了。
+
+*强烈建议*根据[FAQZhcn 常见问题]页面上面的介绍设置Firefox的intl.keyboard.per_window_layout的配置。
 
 *已知问题：* 在Windows XP和Vista下面，TabIMSwitch也许不能正常的工作，这时请关闭Windows系统的高级文字服务。更多的关于如何关闭的内容，请参见[KnownIssuesZhcn 已知问题]
 
