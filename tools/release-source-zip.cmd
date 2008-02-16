@@ -20,8 +20,11 @@ if errorlevel 1 (
 )
 
 "D:\Program Files\7-Zip\7z.exe" a %_pkg% -xr0!*.svn* %_dir%
-googlecode_upload -s "[Source Code] TabImSwitch %_ver% Source Code" -p tabimswitch -u ftofficer.zhangc -l "Type-Source" %_pkg%
+googlecode_upload -s "[Source Code] TabIMSwitch %_ver% Source Code" -p tabimswitch -u ftofficer.zhangc -l "Type-Source" %_pkg%
 if errorlevel 1 goto error
+
+if exist "%_dir%" rmdir /s /q "%_dir%"
+if exist "%_pkg%" del "%_pkg%"
 
 goto finish
 

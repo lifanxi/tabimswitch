@@ -8,7 +8,7 @@ if "%1"=="" (
   set _ver=%1
 )
 
-googlecode_upload -s "[Release] TabImSwitch %_ver%" -p tabimswitch -u ftofficer.zhangc -l "Featured Firefox Extension Type-Installer OpSys-Windows" output\tabimswitch-%_ver%.xpi
+googlecode_upload -s "[Release] TabIMSwitch %_ver%" -p tabimswitch -u ftofficer.zhangc -l "Featured,Firefox,Extension,Type-Installer,OpSys-Windows" output\tabimswitch-%_ver%.xpi
 if errorlevel 1 goto error
 
 goto finish
