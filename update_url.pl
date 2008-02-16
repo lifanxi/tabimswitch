@@ -17,6 +17,7 @@ if ( $command eq 'remove' ) {
   close BAK;
 
   $fileContent =~ s[<em:updateURL>.+</em:updateURL>][]i;
+  $fileContent =~ s[<em:updateKey>.+</em:updateKey>][]i;
 
   open OUTPUT, ">install.rdf" or die "cannot open install.rdf: $!\n";
   print OUTPUT $fileContent;
