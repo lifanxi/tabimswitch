@@ -1,0 +1,2 @@
+#labels FAQ,Language-ZHCN,Phase-Support
+其他语言 *[FAQ English]*
