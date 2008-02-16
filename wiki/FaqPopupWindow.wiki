@@ -1,7 +1,0 @@
-*[FAQ Back to FAQ List]*
-
-*_Why the input method changes back to English after I navigate back from a pop up window?_*
-
-You may try to enable Firefox's "Per Windows Per Keyboard Layout" setting. From about:config, change *`intl.keyboard.per_window_layout`* to *`true`*, and restart Firefox.
-
-Because Firefox has this setting, so when I design TabIMSwitch, I did not support multiple wIndow IM state switch, because people can use this setting to workaround.
