@@ -17,7 +17,9 @@ After installed TabIMSwitch, seems nothing changed for !FireFox? What should I d
 
 TabIMSwitch is designed as a background extension, it just provide new features without bother you about configuring it. So there are no additional GUI for it.
 
-To know if the new function is provided, type chrome://tabimswitch/content/testing.xul in your address bar, and you will see a testing page for TabIMSwitch. Follow the guide on that page to determine if it works.
+To know if the new function is provided, change the current input method to non-English, then focus on the address bar. If the input method is changed to English automatically, then TabIMSwitch is working well.
+
+It is recommended to change the intl.keyboard.per_window_layout value to true according to [FAQ Frequently Asked Questions].
 
 *Known issue: * On Windows XP and Vista, you may found TabIMSwitch does not work correct, please close the Advanced Text Services. More information, refer to [KnownIssues Known Issue Page]
 
