@@ -119,6 +119,8 @@ var prefObserver =
   //
   debugLevel: 2,
   debugPrefix: "TabImSwitch",
+  logToFile: false,
+  logFilePath: null,
   
   multilingual: false,
 
@@ -461,13 +463,14 @@ var tabimswitch = {
   //
   updateDebugSystem: function()
   {
-    if ( prefObserver.logToFile )
+    if ( prefObserver.logToFile == true )
     {
       debugFileWriter.init(prefObserver.debugLevel, prefObserver.logFilePath);
       debugging.init(prefObserver.debugPrefix, prefObserver.debugLevel, debugFileWriter);
     }
     else
     {
+      debugFileWriter.init(0, "");    // Disable file writer, so even native debug log is not output.
       consoleWriter.init();
       debugging.init(prefObserver.debugPrefix, prefObserver.debugLevel, consoleWriter);
     }
