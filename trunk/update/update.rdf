@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Seq RDF:about="rdf:#$98NFw">
+    <RDF:li RDF:resource="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.44"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer"
+                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBAHIADnaOQxA2Jap1lVpGPgYZ5Z/WRMw/zgj6IZAeLM3La/qoITa9MypI8rtcMj7pltgHBqoVp7ej8KziqEeOJ5Fz6XeAVUQzc7lzyogZQJMJTg63cViBOuxZbb3o5+BU06W3VkFyCky3t9nOymLGatnuANU3g9vMF9qyMXVkJrJe">
+    <em:updates RDF:resource="rdf:#$98NFw"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$c8NFw"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="2.0"
+                   em:maxVersion="3.0.*"
+                   em:updateLink="http://tabimswitch.googlecode.com/files/tabimswitch-1.1.0.44.xpi"
+                   em:updateHash="sha1:3a02725d0ca3610a5fde27b2cd8e422d0583998f" />
+  <RDF:Description RDF:about="urn:mozilla:extension:TabImSwitch@ftofficer:1.1.0.44"
+                   em:version="1.1.0.44"
+                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBAGepFa7bQq7yEP0MxTMVzjs8c9DojxQjALQdNtmWxc+I/xQSUWiIBl9+UC8LhO830N1l49ibFeiXax+/BGvU0uYP6QaccWkLVmMMrWtMIXlwi0jUko3zYyIq4I1t4M2EXbnCJ/eKmlpf9uLxA1ZnNrPonqzvBwBnzdX7lgwVSrZ6">
+    <em:targetApplication RDF:resource="rdf:#$c8NFw"/>
+  </RDF:Description>
+</RDF:RDF>
