@@ -14,10 +14,4 @@ TabIMSwitch是一个FireFox的扩展。这个扩展可以记录!FireFox的每个
 
 现在，阅读一下[TutorialZhcn 使用指南]并且开始使用吧！
 
-_如果你觉得这个扩展有用，并且你能够写英文，请访问该扩展 [https://addons.mozilla.org/en-US/firefox/addon/5413 在Mozilla扩展网站上的主页]，并且发表一些看法（Reviews）。只有有了足够多的Review，这个扩展才可以成为Mozilla的公开扩展，就会有更多需要的人知道并且使用它。_
-
-===*_致歉_*===
-
-*因为上一个发布版本1.0.0.37当中的一个问题，TabIMSwitch可能不能正确地被!FireFox自动更新到1.0.0.40或更高版本。请到[http://code.google.com/p/tabimswitch/downloads/list 下载页]下载最新版本手动更新，并告诉其他人。谢谢。*
-
-*在此对所造成的不便致以深深的歉意*
+_2008年经过大家的努力，TabIMSwitch终于正式成为Mozilla的公开扩展。这表明TabIMSwitch可以被更广泛的人使用。请访问[https://addons.mozilla.org/addon/5413 在Mozilla扩展网站上的主页]获得Mozilla Addons正式版的扩展。_
