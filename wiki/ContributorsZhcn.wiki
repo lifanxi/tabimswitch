@@ -11,4 +11,4 @@
     * [http://forums.mozine.cn/index.php?showuser=3 dudu8995]
     * [http://forums.mozine.cn/index.php?showuser=45135 湘雪龙]
   * 来自[http://www.newsmth.net 水木社区BBS] and [http://bbs.ustc.edu.cn 瀚海星云BBS]的网友也帮助了早期不稳定版本的测试工作。
- 
+  * Mozilla Addons 用户[https://addons.mozilla.org/zh-CN/firefox/user/431 Avi Hilachmi]测试并报告了希伯来语的兼容性。
