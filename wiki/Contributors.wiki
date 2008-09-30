@@ -11,3 +11,4 @@ Other Languages: [ContributorsZhcn 简体中文]
     * [http://forums.mozine.cn/index.php?showuser=3 dudu8995]
     * [http://forums.mozine.cn/index.php?showuser=45135 湘雪龙]
   * The friends from [http://www.newsmth.net SMTH BBS] and [http://bbs.ustc.edu.cn USTC BBS] also contributed on testing early unstable versions.
+  * Mozilla Addons user [https://addons.mozilla.org/zh-CN/firefox/user/431 Avi Hilachmi] reported the compatibility of Hebrew.
