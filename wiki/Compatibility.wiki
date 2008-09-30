@@ -3,7 +3,7 @@
 
 The latest TabIMSwitch is known compatible with the following input methods:
 
-* Simplified Chinese
+ * Simplified Chinese
   * All Windows-default input methods
     * Microsoft Pinyin 2003
     * Microsoft Pinyin 3.0
@@ -13,8 +13,8 @@ The latest TabIMSwitch is known compatible with the following input methods:
   * Google Pinyin
   * Sogou Pinyin
   * Ziguang Input Method
-* Japanese
-* Hebrew
+ * Japanese
+ * Hebrew
 
 Other Windows-default input method should work well.
 
