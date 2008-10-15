@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+  - Copyright (c) 2007 ftofficer <ftofficer.zhangc@gmail.com>
+  -
+  - Permission to use, copy, modify, and distribute this software for any
+  - purpose with or without fee is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  - WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  - MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  - ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  - WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  - ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  - OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  - -->
+
+<!-- This is a Wizard to report bugs for TabIMSwitch -->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!-- <!DOCTYPE overlay SYSTEM "chrome://tabimswitch/locale/bugReport.dtd"> -->
+<wizard id="wiz_BugReport" title="TabIMSwitch Bug Report Wizard"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  
+  <script src="bugReport.js" />
+
+  <wizardpage id="welcome">
+    <vbox>
+      <label class="header" value="This wizard will lead you to submit a bug report or suggestions to improve TabIMSwitch"/>
+      <label value="Click Next to begin the wizard."/>
+    </vbox>
+  </wizardpage>
+
+  <wizardpage id="collect-contact-info"
+    description="Step 1: Provide some contact information"
+    onpageshow="bugReporter.checkContactInfo()">
+    <vbox>
+      <label class="header" value="We will contact you with these information if your reports is updated." />
+      <hbox>
+        <label value="Your name:" control="submitter" width="100"/>
+        <textbox id="submitter" oninput="bugReporter.checkContactInfo();" size="30"/>
+      </hbox>
+      <hbox>
+        <label value="Your mail address:" control="submitter-email" width="100" />
+        <textbox id="submitter-email" oninput="bugReporter.checkContactInfo();" size="30"/>
+      </hbox>
+    </vbox>
+  </wizardpage>
+
+  <wizardpage id="descript-problems"
+    description="Step 2: Type some brief descriptions about the problem."
+    onpageshow="bugReporter.checkDescription()">
+    <vbox>
+      <label value="Please provide some brief description about the problem you found."
+         control="bug-description"/>
+      <textbox multiline="true" id="bug-description" oninput="bugReporter.checkDescription()"
+          rows="20" cols="200" maxlength="5000" />
+    </vbox>
+  </wizardpage>
+
+  <wizardpage id="enable-debug-log"
+    description="Step 3: Enable debug log">
+  </wizardpage>
+
+  <wizardpage id="finish-submit">
+  </wizardpage>
+
+</wizard>
