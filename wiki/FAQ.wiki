@@ -12,3 +12,14 @@ You may try to enable Firefox's "Per Windows Per Keyboard Layout" setting.
   # Restart Firefox.
 
 Because Firefox has this setting, so when I design TabIMSwitch, I did not support multiple wIndow IM state switch, because people can use this setting to workaround.
+
+=== Why TabIMSwitch adds English input method automatically? ===
+
+Because a bug in Microsoft API, TabIMSwitch is not able to close input method (especially some Chinese Pinyin input methods) correctly under some conditions. To make sure when user focuses on the address bar, the input method is closed, TabIMSwitch will add an English input method to workaround the API bug. The added input method will neither impact your system default input method, nor impact your normal input method switch.
+
+If you really cares about the input method added by TabIMSwitch, you can modify TabIMSwitch's default behavior with TabIMSwitch's multilingual setting. Changing the default setting does not guarantee TabIMSwitch working as expected.
+  # Open a new tab, and type about:config in the address bar.
+  # Right-click on any item, and select _New_ -> _Boolean_, from the popup window, type _`extensions.tabimswitch.env.multilingual`_, click OK, and select value as _`false`_.
+  # Restart Firefox.
+
+If you want to revert to the default behavior, please select the above item, right click on it and select "reset".
